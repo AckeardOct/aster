@@ -18,10 +18,11 @@ private:
   void initSDL(void);
   void processInput(float dt);
   void update(float dt) {}
-  void render(float dt) {}
+  void render(float dt);
 
 private:
   SDL_Window* sdl_window = nullptr;
+  SDL_Renderer* sdl_renderer = nullptr;
 
   bool quitRequested = false;
 };

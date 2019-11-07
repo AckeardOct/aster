@@ -16,6 +16,9 @@ GameWindow::GameWindow(int argc, char** argv)
 
 GameWindow::~GameWindow()
 {
+  SDL_DestroyRenderer(sdl_renderer);
+  sdl_renderer = nullptr;
+
   SDL_DestroyWindow(sdl_window);
   sdl_window = nullptr;
 
@@ -73,6 +76,11 @@ GameWindow::initSDL()
     printf("SDL_CreateWindow() failed. error: %s", SDL_GetError());
   }
 
+  sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED);
+  if (sdl_renderer == nullptr) {
+    printf("SDL_CreateRenderer() failed. error: %s", SDL_GetError());
+  }
+
   printf("initSDL() success!");
 }
 
@@ -88,4 +96,13 @@ GameWindow::processInput(float dt)
         break;
     }
   }
+}
+
+void
+GameWindow::render(float dt)
+{
+  SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x00, 0x00, 0xff);
+  SDL_RenderClear(sdl_renderer);
+
+  SDL_RenderPresent(sdl_renderer);
 }
