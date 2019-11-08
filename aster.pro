@@ -14,4 +14,5 @@ SOURCES += \
         src/main.cpp
 
 HEADERS += \
-    src/common/game_window.h
+    src/common/game_window.h \
+    src/common/logger.h

@@ -1,4 +1,5 @@
 #include "game_window.h"
+#include "logger.h"
 #include <SDL2/SDL.h>
 
 static const struct
@@ -63,7 +64,7 @@ void
 GameWindow::initSDL()
 {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    printf("SDL_Init(SDL_INIT_VIDEO) failed. error: %s", SDL_GetError());
+    LogCritical("SDL_Init(SDL_INIT_VIDEO) failed. error: %s", SDL_GetError());
   }
 
   sdl_window = SDL_CreateWindow(SETTINGS.title,
@@ -73,15 +74,15 @@ GameWindow::initSDL()
                                 SETTINGS.height,
                                 SDL_WINDOW_SHOWN);
   if (sdl_window == nullptr) {
-    printf("SDL_CreateWindow() failed. error: %s", SDL_GetError());
+    LogCritical("SDL_CreateWindow() failed. error: %s", SDL_GetError());
   }
 
   sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED);
   if (sdl_renderer == nullptr) {
-    printf("SDL_CreateRenderer() failed. error: %s", SDL_GetError());
+    LogCritical("SDL_CreateRenderer() failed. error: %s", SDL_GetError());
   }
 
-  printf("initSDL() success!");
+  LogMsg("initSDL() success!");
 }
 
 void
