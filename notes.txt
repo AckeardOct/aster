@@ -2,4 +2,4 @@
 conan remote add bincrafters "https://api.bintray.com/conan/bincrafters/public-conan"
 
 # code-style
-clang-format Mozilla style
+clang-format WebKit style

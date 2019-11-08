@@ -6,26 +6,25 @@ class IScene;
 class SDL_Renderer;
 class SDL_Window;
 
-class GameWindow
-{
+class GameWindow {
 public:
-  GameWindow(int argc, char** argv);
-  ~GameWindow();
+    GameWindow(int argc, char** argv);
+    ~GameWindow();
 
-  void runLoop();
-  glm::vec2 getSize() const;
-  SDL_Renderer& getRenderer();
-
-private:
-  void initSDL(void);
-  void processInput(float dt);
-  void update(float dt);
-  void render(float dt);
+    void runLoop();
+    glm::vec2 getSize() const;
+    SDL_Renderer& getRenderer();
 
 private:
-  SDL_Window* sdl_window = nullptr;
-  SDL_Renderer* sdl_renderer = nullptr;
-  IScene* scene = nullptr;
+    void initSDL(void);
+    void processInput(float dt);
+    void update(float dt);
+    void render(float dt);
 
-  bool quitRequested = false;
+private:
+    SDL_Window* sdl_window = nullptr;
+    SDL_Renderer* sdl_renderer = nullptr;
+    IScene* scene = nullptr;
+
+    bool quitRequested = false;
 };

@@ -1,137 +1,131 @@
 #include "game_window.h"
+
+#include <SDL2/SDL.h>
+
 #include "../scenes/asteroids_scene.h"
 #include "logger.h"
-#include <SDL2/SDL.h>
 
 static const struct
 {
-  int width = 800;
-  int height = 600;
-  int fps = 30;
-  const char* title = "Aster";
+    int width = 800;
+    int height = 600;
+    int fps = 30;
+    const char* title = "Aster";
 } SETTINGS;
 
 GameWindow::GameWindow(int argc, char** argv)
 {
-  this->initSDL();
+    this->initSDL();
 
-  scene = new AsteroidsScene(*this);
+    scene = new AsteroidsScene(*this);
 }
 
 GameWindow::~GameWindow()
 {
-  SDL_DestroyRenderer(sdl_renderer);
-  sdl_renderer = nullptr;
+    SDL_DestroyRenderer(sdl_renderer);
+    sdl_renderer = nullptr;
 
-  SDL_DestroyWindow(sdl_window);
-  sdl_window = nullptr;
+    SDL_DestroyWindow(sdl_window);
+    sdl_window = nullptr;
 
-  SDL_Quit();
+    SDL_Quit();
 }
 
-void
-GameWindow::runLoop()
+void GameWindow::runLoop()
 {
-  const float frameLength_ms = 1000.f / SETTINGS.fps;
-  float dt = 0;
-  uint32_t time_ms = SDL_GetTicks();
-  while (!quitRequested) {
-    { // check fps
-      uint32_t newTime_ms = SDL_GetTicks();
-      dt = newTime_ms - time_ms;
-      if (dt < frameLength_ms) {
-        uint32_t diff = frameLength_ms - dt;
-        if (diff > 5) {
-          SDL_Delay(diff / 2);
+    const float frameLength_ms = 1000.f / SETTINGS.fps;
+    float dt = 0;
+    uint32_t time_ms = SDL_GetTicks();
+    while (!quitRequested) {
+        { // check fps
+            uint32_t newTime_ms = SDL_GetTicks();
+            dt = newTime_ms - time_ms;
+            if (dt < frameLength_ms) {
+                uint32_t diff = frameLength_ms - dt;
+                if (diff > 5) {
+                    SDL_Delay(diff / 2);
+                }
+                continue;
+            }
+            time_ms = newTime_ms;
         }
-        continue;
-      }
-      time_ms = newTime_ms;
+
+        processInput(dt);
+        update(dt);
+        render(dt);
+    }
+}
+
+glm::vec2 GameWindow::getSize() const
+{
+    int w, h;
+    SDL_GetWindowSize(sdl_window, &w, &h);
+    return glm::vec2(w, h);
+}
+
+SDL_Renderer& GameWindow::getRenderer()
+{
+    if (sdl_renderer == nullptr) {
+        LogCritical("sdl_renderer is null");
+    }
+    return *sdl_renderer;
+}
+
+void GameWindow::initSDL()
+{
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        LogCritical("SDL_Init(SDL_INIT_VIDEO) failed. error: %s", SDL_GetError());
     }
 
-    processInput(dt);
-    update(dt);
-    render(dt);
-  }
+    sdl_window = SDL_CreateWindow(SETTINGS.title,
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        SETTINGS.width,
+        SETTINGS.height,
+        SDL_WINDOW_SHOWN);
+    if (sdl_window == nullptr) {
+        LogCritical("SDL_CreateWindow() failed. error: %s", SDL_GetError());
+    }
+
+    sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED);
+    if (sdl_renderer == nullptr) {
+        LogCritical("SDL_CreateRenderer() failed. error: %s", SDL_GetError());
+    }
+
+    LogMsg("initSDL() success!");
 }
 
-glm::vec2
-GameWindow::getSize() const
+void GameWindow::processInput(float dt)
 {
-  int w, h;
-  SDL_GetWindowSize(sdl_window, &w, &h);
-  return glm::vec2(w, h);
+    SDL_Event sdl_event;
+    while (SDL_PollEvent(&sdl_event)) {
+        if (scene) {
+            scene->input(dt, sdl_event);
+        }
+
+        switch (sdl_event.type) {
+        case SDL_QUIT:
+            quitRequested = true;
+            break;
+        }
+    }
 }
 
-SDL_Renderer&
-GameWindow::getRenderer()
+void GameWindow::update(float dt)
 {
-  if (sdl_renderer == nullptr) {
-    LogCritical("sdl_renderer is null");
-  }
-  return *sdl_renderer;
+    if (scene) {
+        scene->update(dt);
+    }
 }
 
-void
-GameWindow::initSDL()
+void GameWindow::render(float dt)
 {
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    LogCritical("SDL_Init(SDL_INIT_VIDEO) failed. error: %s", SDL_GetError());
-  }
-
-  sdl_window = SDL_CreateWindow(SETTINGS.title,
-                                SDL_WINDOWPOS_UNDEFINED,
-                                SDL_WINDOWPOS_UNDEFINED,
-                                SETTINGS.width,
-                                SETTINGS.height,
-                                SDL_WINDOW_SHOWN);
-  if (sdl_window == nullptr) {
-    LogCritical("SDL_CreateWindow() failed. error: %s", SDL_GetError());
-  }
-
-  sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED);
-  if (sdl_renderer == nullptr) {
-    LogCritical("SDL_CreateRenderer() failed. error: %s", SDL_GetError());
-  }
-
-  LogMsg("initSDL() success!");
-}
-
-void
-GameWindow::processInput(float dt)
-{
-  SDL_Event sdl_event;
-  while (SDL_PollEvent(&sdl_event)) {
+    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x00, 0x00, 0xff);
+    SDL_RenderClear(sdl_renderer);
 
     if (scene) {
-      scene->input(dt, sdl_event);
+        scene->render(dt);
     }
 
-    switch (sdl_event.type) {
-      case SDL_QUIT:
-        quitRequested = true;
-        break;
-    }
-  }
-}
-
-void
-GameWindow::update(float dt)
-{
-  if (scene) {
-    scene->update(dt);
-  }
-}
-
-void
-GameWindow::render(float dt)
-{
-  SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x00, 0x00, 0xff);
-  SDL_RenderClear(sdl_renderer);
-
-  if (scene) {
-    scene->render(dt);
-  }
-
-  SDL_RenderPresent(sdl_renderer);
+    SDL_RenderPresent(sdl_renderer);
 }
