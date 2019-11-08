@@ -11,8 +11,11 @@ include($$CONAN_PATH/conanbuildinfo.pri)
 
 SOURCES += \
         src/common/game_window.cpp \
-        src/main.cpp
+        src/main.cpp \
+        src/scenes/asteroids_scene.cpp
 
 HEADERS += \
     src/common/game_window.h \
-    src/common/logger.h
+    src/common/logger.h \
+    src/scenes/asteroids_scene.h \
+    src/scenes/i_scene.h

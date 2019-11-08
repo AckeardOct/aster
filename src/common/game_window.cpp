@@ -1,4 +1,5 @@
 #include "game_window.h"
+#include "../scenes/asteroids_scene.h"
 #include "logger.h"
 #include <SDL2/SDL.h>
 
@@ -13,6 +14,8 @@ static const struct
 GameWindow::GameWindow(int argc, char** argv)
 {
   this->initSDL();
+
+  scene = new AsteroidsScene(*this);
 }
 
 GameWindow::~GameWindow()
@@ -60,6 +63,15 @@ GameWindow::getSize() const
   return glm::vec2(w, h);
 }
 
+SDL_Renderer&
+GameWindow::getRenderer()
+{
+  if (sdl_renderer == nullptr) {
+    LogCritical("sdl_renderer is null");
+  }
+  return *sdl_renderer;
+}
+
 void
 GameWindow::initSDL()
 {
@@ -91,6 +103,10 @@ GameWindow::processInput(float dt)
   SDL_Event sdl_event;
   while (SDL_PollEvent(&sdl_event)) {
 
+    if (scene) {
+      scene->input(dt, sdl_event);
+    }
+
     switch (sdl_event.type) {
       case SDL_QUIT:
         quitRequested = true;
@@ -100,10 +116,22 @@ GameWindow::processInput(float dt)
 }
 
 void
+GameWindow::update(float dt)
+{
+  if (scene) {
+    scene->update(dt);
+  }
+}
+
+void
 GameWindow::render(float dt)
 {
   SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x00, 0x00, 0xff);
   SDL_RenderClear(sdl_renderer);
+
+  if (scene) {
+    scene->render(dt);
+  }
 
   SDL_RenderPresent(sdl_renderer);
 }
