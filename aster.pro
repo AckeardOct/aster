@@ -9,6 +9,9 @@ CONFIG += conan_basic_setup
 CONAN_PATH = $$_PRO_FILE_PWD_/build/conan
 include($$CONAN_PATH/conanbuildinfo.pri)
 
+LUA_PATH = $$_PRO_FILE_PWD_/build/lua
+include($$LUA_PATH/lua.pri)
+
 SOURCES += \
         src/common/game_window.cpp \
         src/main.cpp \
