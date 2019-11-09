@@ -33,3 +33,27 @@ echo "LIBS += -L\$\$PWD/bin/ -llua"           >> $luapri
 echo "INCLUDEPATH += \$\$PWD/bin/include"     >> $luapri
 echo "DEPENDPATH += \$\$PWD/bin/include"      >> $luapri
 echo "PRE_TARGETDEPS += \$\$PWD/bin/liblua.a" >> $luapri
+
+cd $root
+echo "----- GOOGLE TESTS -----"
+dir="$root/build/gtest"
+rm -rf $dir
+mkdir -p $dir
+cd $dir
+git clone https://github.com/google/googletest.git
+cd googletest
+mkdir build
+cd build
+cmake ..
+make
+cd $dir
+
+gtestpri="$dir/gtest.pri"
+touch $gtestpri
+echo "LIBS += -L\$\$PWD/googletest/build/lib/ -lgtest"           >> $gtestpri
+echo "INCLUDEPATH += \$\$PWD/googletest/googletest/include/"     >> $gtestpri
+echo "DEPENDPATH += \$\$PWD/googletest/googletest/include/"      >> $gtestpri
+echo "PRE_TARGETDEPS += \$\$PWD/googletest/build/lib/libgtest.a" >> $gtestpri
+
+
+
