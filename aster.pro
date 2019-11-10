@@ -18,12 +18,20 @@ include($$GTEST_PATH/gtest.pri)
 SOURCES += \
         src/common/game_config.cpp \
         src/common/game_window.cpp \
+        src/components/cmp_basic.cpp \
+        src/components/cmp_render.cpp \
         src/main.cpp \
-        src/scenes/asteroids_scene.cpp
+        src/scenes/scn_asteroids.cpp \
+        src/systems/sys_basic.cpp \
+        src/systems/sys_render.cpp
 
 HEADERS += \
     src/common/game_config.h \
     src/common/game_window.h \
     src/common/logger.h \
-    src/scenes/asteroids_scene.h \
-    src/scenes/i_scene.h
+    src/components/cmp_basic.h \
+    src/components/cmp_render.h \
+    src/scenes/i_scene.h \
+    src/scenes/scn_asteroids.h \
+    src/systems/sys_basic.h \
+    src/systems/sys_render.h

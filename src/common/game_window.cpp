@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL.h>
 
-#include "../scenes/asteroids_scene.h"
+#include "../scenes/scn_asteroids.h"
 #include "logger.h"
 
 GameWindow::GameWindow(int argc, char** argv)
@@ -54,6 +54,11 @@ glm::vec2 GameWindow::getSize() const
     int w, h;
     SDL_GetWindowSize(sdl_window, &w, &h);
     return glm::vec2(w, h);
+}
+
+glm::vec2 GameWindow::getCenter() const
+{
+    return getSize() / 2.f;
 }
 
 SDL_Renderer& GameWindow::getRenderer()

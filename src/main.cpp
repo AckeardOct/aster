@@ -2,8 +2,6 @@
 
 #include <gtest/gtest.h>
 
-#include <lua/lua.hpp>
-
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);

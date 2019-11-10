@@ -15,6 +15,7 @@ public:
 
     void runLoop();
     glm::vec2 getSize() const;
+    glm::vec2 getCenter() const;
     SDL_Renderer& getRenderer();
 
 private:
