@@ -2,6 +2,7 @@
 
 #include "../components/cmp_basic.h"
 
+#include <Box2D/Dynamics/b2Body.h>
 #include <SDL2/SDL_events.h>
 #include <glm/glm.hpp>
 
@@ -47,7 +48,7 @@ void InputSys::update(entt::registry& reg, float dt)
 
     auto moveView = reg.view<PositionCmp, MoveCmp, InputableCmp>();
     for (auto et : moveView) {
-        if (direction.length() > 0.1) {
+        if (direction.length() > 0.1) { // TODO Check valid
             glm::normalize(direction);
             PositionCmp& posCmp = moveView.get<PositionCmp>(et);
             MoveCmp& moveCmp = moveView.get<MoveCmp>(et);
@@ -56,4 +57,25 @@ void InputSys::update(entt::registry& reg, float dt)
     }
 
     events.clear();
+}
+
+PhysSys::PhysSys(b2World& physWorld)
+    : physWorld(physWorld)
+{
+}
+
+void PhysSys::update(entt::registry& reg, float dt)
+{
+    physWorld.Step(dt, 6, 2);
+    auto physView = reg.view<PositionCmp, PhysBodyCmp>();
+    for (auto et : physView) {
+        PositionCmp& posCmp = physView.get<PositionCmp>(et);
+        PhysBodyCmp& physBodyCmp = physView.get<PhysBodyCmp>(et);
+
+        b2Vec2 position = physBodyCmp.body->GetPosition();
+        float32 angle = physBodyCmp.body->GetAngle();
+
+        posCmp.pos.x = position.x;
+        posCmp.pos.y = position.y;
+    }
 }

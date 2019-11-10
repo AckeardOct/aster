@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <vector>
 
+class b2World;
+
 class IBasicSys {
 public:
     virtual void update(entt::registry& reg, float dt) = 0;
@@ -26,4 +28,15 @@ public: // IBasicSys interface
 private:
     std::vector<SDL_Event> events;
     std::unordered_map<int, bool> keys;
+};
+
+class PhysSys : public IBasicSys {
+public:
+    PhysSys(b2World& physWorld);
+
+public: // IBasicSys interface
+    virtual void update(entt::registry& reg, float dt) override;
+
+private:
+    b2World& physWorld;
 };

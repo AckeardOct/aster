@@ -1,6 +1,9 @@
 #pragma once
 
+#include <Box2D/Dynamics/b2World.h>
 #include <glm/vec2.hpp>
+
+class b2Body;
 
 struct PositionCmp {
     glm::vec2 pos;
@@ -23,4 +26,11 @@ public:
 };
 
 struct InputableCmp {
+};
+
+struct PhysBodyCmp {
+    b2Body* body = nullptr;
+
+public:
+    PhysBodyCmp(b2World& physWorld, glm::vec2 pos, glm::vec2 size);
 };

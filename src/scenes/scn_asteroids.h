@@ -2,6 +2,7 @@
 
 #include "i_scene.h"
 
+#include <Box2D/Dynamics/b2World.h>
 #include <entt/entity/registry.hpp>
 #include <vector>
 
@@ -26,6 +27,7 @@ private:
     void initEntities();
 
 private:
+    b2World physWorld;
     InputSys* inputSystem = nullptr;
 
     entt::registry reg;

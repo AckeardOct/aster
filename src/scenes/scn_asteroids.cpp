@@ -11,13 +11,26 @@
 
 AsteroidsScene::AsteroidsScene(GameWindow& window)
     : IScene(window)
+    , physWorld(b2Vec2(0.f, 9.2f))
 {
     initBasicSystems();
     initRenderSystems();
     initEntities();
 }
 
-AsteroidsScene::~AsteroidsScene() {}
+AsteroidsScene::~AsteroidsScene()
+{
+    inputSystem = nullptr;
+    for (auto& sys : basicSystems) {
+        delete sys;
+    }
+    basicSystems.clear();
+
+    for (auto& sys : renderSystems) {
+        delete sys;
+    }
+    renderSystems.clear();
+}
 
 void AsteroidsScene::input(float dt, const SDL_Event& event)
 {
@@ -49,6 +62,7 @@ void AsteroidsScene::initBasicSystems()
 {
     inputSystem = new InputSys();
     basicSystems.push_back(inputSystem);
+    basicSystems.push_back(new PhysSys(physWorld));
 }
 
 void AsteroidsScene::initRenderSystems()
@@ -62,7 +76,7 @@ void AsteroidsScene::initEntities()
     glm::vec2 wcenter = window.getCenter();
 
     auto entity = reg.create();
-    glm::vec2 pos(wcenter);
+    glm::vec2 pos(wcenter.x, 0);
     glm::vec2 size(wsize / 8.0f);
     reg.assign<PositionCmp>(entity, pos, size);
 
@@ -72,4 +86,6 @@ void AsteroidsScene::initEntities()
     float speed = 100.f;
     reg.assign<MoveCmp>(entity, glm::vec2(speed, speed));
     reg.assign<InputableCmp>(entity);
+
+    reg.assign<PhysBodyCmp>(entity, physWorld, pos, size);
 }

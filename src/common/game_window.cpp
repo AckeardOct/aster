@@ -15,6 +15,9 @@ GameWindow::GameWindow(int argc, char** argv)
 
 GameWindow::~GameWindow()
 {
+    delete scene;
+    scene = nullptr;
+
     SDL_DestroyRenderer(sdl_renderer);
     sdl_renderer = nullptr;
 
