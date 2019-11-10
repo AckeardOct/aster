@@ -1,6 +1,9 @@
 #pragma once
 
+#include <SDL2/SDL_events.h>
 #include <entt/entity/registry.hpp>
+#include <unordered_map>
+#include <vector>
 
 class IBasicSys {
 public:
@@ -11,4 +14,16 @@ public:
 
 private:
     bool isPaused = false;
+};
+
+class InputSys : public IBasicSys {
+public:
+    void onInput(const SDL_Event& event);
+
+public: // IBasicSys interface
+    virtual void update(entt::registry& reg, float dt) override;
+
+private:
+    std::vector<SDL_Event> events;
+    std::unordered_map<int, bool> keys;
 };

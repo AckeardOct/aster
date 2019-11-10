@@ -21,6 +21,9 @@ AsteroidsScene::~AsteroidsScene() {}
 
 void AsteroidsScene::input(float dt, const SDL_Event& event)
 {
+    if (inputSystem) {
+        inputSystem->onInput(event);
+    }
 }
 
 void AsteroidsScene::update(float dt)
@@ -44,6 +47,8 @@ void AsteroidsScene::render(float dt)
 
 void AsteroidsScene::initBasicSystems()
 {
+    inputSystem = new InputSys();
+    basicSystems.push_back(inputSystem);
 }
 
 void AsteroidsScene::initRenderSystems()
@@ -63,4 +68,8 @@ void AsteroidsScene::initEntities()
 
     glm::ivec4 color(0xff, 0x00, 0x00, 0x00);
     reg.assign<RectRendCmp>(entity, color, color);
+
+    float speed = 100.f;
+    reg.assign<MoveCmp>(entity, glm::vec2(speed, speed));
+    reg.assign<InputableCmp>(entity);
 }

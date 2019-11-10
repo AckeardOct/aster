@@ -7,6 +7,7 @@
 
 class IBasicSys;
 class IRenderSys;
+class InputSys;
 
 class AsteroidsScene : public IScene {
 public:
@@ -25,6 +26,8 @@ private:
     void initEntities();
 
 private:
+    InputSys* inputSystem = nullptr;
+
     entt::registry reg;
     std::vector<IBasicSys*> basicSystems;
     std::vector<IRenderSys*> renderSystems;
