@@ -16,11 +16,13 @@ GTEST_PATH = $$_PRO_FILE_PWD_/build/gtest
 include($$GTEST_PATH/gtest.pri)
 
 SOURCES += \
+        src/common/game_config.cpp \
         src/common/game_window.cpp \
         src/main.cpp \
         src/scenes/asteroids_scene.cpp
 
 HEADERS += \
+    src/common/game_config.h \
     src/common/game_window.h \
     src/common/logger.h \
     src/scenes/asteroids_scene.h \

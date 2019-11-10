@@ -5,15 +5,8 @@
 #include "../scenes/asteroids_scene.h"
 #include "logger.h"
 
-static const struct
-{
-    int width = 800;
-    int height = 600;
-    int fps = 30;
-    const char* title = "Aster";
-} SETTINGS;
-
 GameWindow::GameWindow(int argc, char** argv)
+    : config(argc, argv)
 {
     this->initSDL();
 
@@ -33,7 +26,7 @@ GameWindow::~GameWindow()
 
 void GameWindow::runLoop()
 {
-    const float frameLength_ms = 1000.f / SETTINGS.fps;
+    const float frameLength_ms = 1000.f / config.fps;
     float dt = 0;
     uint32_t time_ms = SDL_GetTicks();
     while (!quitRequested) {
@@ -77,11 +70,11 @@ void GameWindow::initSDL()
         LogCritical("SDL_Init(SDL_INIT_VIDEO) failed. error: %s", SDL_GetError());
     }
 
-    sdl_window = SDL_CreateWindow(SETTINGS.title,
+    sdl_window = SDL_CreateWindow(config.title.c_str(),
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
-        SETTINGS.width,
-        SETTINGS.height,
+        config.width,
+        config.height,
         SDL_WINDOW_SHOWN);
     if (sdl_window == nullptr) {
         LogCritical("SDL_CreateWindow() failed. error: %s", SDL_GetError());

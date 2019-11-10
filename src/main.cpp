@@ -2,10 +2,7 @@
 
 #include <gtest/gtest.h>
 
-TEST(SimpleTest, Primitive)
-{
-    EXPECT_EQ(true, true);
-}
+#include <lua/lua.hpp>
 
 int main(int argc, char** argv)
 {
@@ -19,4 +16,9 @@ int main(int argc, char** argv)
     window.runLoop();
 
     return 0;
+}
+
+TEST(SimpleTest, Primitive)
+{
+    EXPECT_EQ(true, true);
 }
