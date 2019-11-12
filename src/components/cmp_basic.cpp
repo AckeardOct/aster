@@ -44,20 +44,25 @@ static b2BodyType convToB2BodyType(PhysBodyCmp::Type type)
 }
 
 PhysBodyCmp::PhysBodyCmp(b2World& physWorld, Type type, glm::vec2 pos, glm::vec2 size)
+    : type(type)
 {
     b2BodyDef bodyDef;
     bodyDef.type = convToB2BodyType(type);
-    pos -= size / 2.f; // conv to centered pivot
+    //pos += size / 2.f; // conv to centered pivot
     bodyDef.position.Set(pos.x, pos.y);
     this->body = physWorld.CreateBody(&bodyDef);
 
     b2PolygonShape dynamicBox;
+    size /= 2.f;
     dynamicBox.SetAsBox(size.x, size.y);
+    //    if (type != Type::staticBody) {
+    //        dynamicBox.SetAsBox(1, 1);
+    //    }
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &dynamicBox;
-    fixtureDef.density = 1.0f;
-    fixtureDef.friction = 0.3f;
+    //fixtureDef.density = 1.0f;
+    //fixtureDef.friction = 0.3f;
 
     this->body->CreateFixture(&fixtureDef);
 }

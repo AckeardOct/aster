@@ -72,11 +72,15 @@ void PhysSys::update(entt::registry& reg, float dt)
         PositionCmp& posCmp = physView.get<PositionCmp>(et);
         PhysBodyCmp& physBodyCmp = physView.get<PhysBodyCmp>(et);
 
+        if (physBodyCmp.type == PhysBodyCmp::Type::staticBody) {
+            continue;
+        }
+
         b2Vec2 position = physBodyCmp.body->GetPosition();
         float32 angle = physBodyCmp.body->GetAngle();
 
         posCmp.pos.x = position.x;
         posCmp.pos.y = position.y;
-        posCmp.pos += posCmp.size / 2.f; // conv to centered pivot
+        //posCmp.pos += posCmp.size / 2.f; // conv to centered pivot
     }
 }

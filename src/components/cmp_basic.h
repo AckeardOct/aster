@@ -29,13 +29,16 @@ struct InputableCmp {
 };
 
 struct PhysBodyCmp {
-    b2Body* body = nullptr;
-
-public:
-    enum class Type {
+    enum class Type : uint8_t {
         staticBody = 0,
         kinematicBody,
         dynamicBody
     };
+
+public:
+    b2Body* body = nullptr;
+    Type type = Type::staticBody;
+
+public:
     PhysBodyCmp(b2World& physWorld, Type type, glm::vec2 pos, glm::vec2 size);
 };

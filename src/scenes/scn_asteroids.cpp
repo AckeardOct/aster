@@ -77,8 +77,9 @@ void AsteroidsScene::initEntities()
 
     { // player
         auto entity = reg.create();
-        glm::vec2 pos(wcenter.x, wcenter.y);
-        glm::vec2 size(wsize / 8.0f);
+        glm::vec2 pos(wcenter.x - 10, wcenter.y - 10);
+        //glm::vec2 size(wsize / 8.0f);
+        glm::vec2 size(glm::vec2(20, 20));
         reg.assign<PositionCmp>(entity, pos, size);
 
         glm::ivec4 color(0xff, 0x00, 0x00, 0x00);
@@ -91,66 +92,60 @@ void AsteroidsScene::initEntities()
         reg.assign<PhysBodyCmp>(entity, physWorld, PhysBodyCmp::Type::dynamicBody, pos, size);
     }
 
-    { // walls
-        glm::vec2 size(10, wsize.y);
+    if (false) { // plane
+        auto entity = reg.create();
+        glm::vec2 pos(200, 280);
+        glm::vec2 size(100, 20);
+        reg.assign<PositionCmp>(entity, pos, size);
+
+        glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
+        reg.assign<RectRendCmp>(entity, color, color);
+
+        reg.assign<PhysBodyCmp>(entity, physWorld, PhysBodyCmp::Type::staticBody, pos, size);
+    }
+
+    if (true) { // walls
+        glm::vec2 size(0, wsize.y);
         { // left
             auto entity = reg.create();
-            glm::vec2 pos(0, wcenter.y);
+            glm::vec2 pos(-1, wcenter.y);
             reg.assign<PositionCmp>(entity, pos, size);
 
-            glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
-            reg.assign<RectRendCmp>(entity, color, color);
+            //glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
+            //reg.assign<RectRendCmp>(entity, color, color);
 
             reg.assign<PhysBodyCmp>(entity, physWorld, PhysBodyCmp::Type::staticBody, pos, size);
         }
         { // right
             auto entity = reg.create();
-            glm::vec2 pos(wsize.x, wcenter.y);
+            glm::vec2 pos(wsize.x + 1, wcenter.y);
             reg.assign<PositionCmp>(entity, pos, size);
 
-            glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
-            reg.assign<RectRendCmp>(entity, color, color);
+            //glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
+            //reg.assign<RectRendCmp>(entity, color, color);
 
             reg.assign<PhysBodyCmp>(entity, physWorld, PhysBodyCmp::Type::staticBody, pos, size);
         }
-        size = glm::vec2(wsize.x, 10);
+        size = glm::vec2(wsize.x, 0);
         { // top
             auto entity = reg.create();
-            glm::vec2 pos(wcenter.x, 0);
+            glm::vec2 pos(wcenter.x, -1);
             reg.assign<PositionCmp>(entity, pos, size);
 
-            glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
-            reg.assign<RectRendCmp>(entity, color, color);
+            //glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
+            //reg.assign<RectRendCmp>(entity, color, color);
 
             reg.assign<PhysBodyCmp>(entity, physWorld, PhysBodyCmp::Type::staticBody, pos, size);
         }
         { // bottom
             auto entity = reg.create();
-            glm::vec2 pos(wcenter.x, wsize.y);
+            glm::vec2 pos(wcenter.x, wsize.y + 1);
             reg.assign<PositionCmp>(entity, pos, size);
 
-            glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
-            reg.assign<RectRendCmp>(entity, color, color);
+            //glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
+            //reg.assign<RectRendCmp>(entity, color, color);
 
             reg.assign<PhysBodyCmp>(entity, physWorld, PhysBodyCmp::Type::staticBody, pos, size);
         }
     }
-
-    //    { // walls
-    //            WallTpl wall;
-    //            // left
-    //            wall.size = glm::vec2(1, winSize.y);
-    //            wall.pos  = glm::vec2(0, winCenter.y);
-    //            wall.makeEntity(reg);
-    //            // right
-    //            wall.pos = glm::vec2(winSize.x, winCenter.y);
-    //            wall.makeEntity(reg);
-    //            // top
-    //            wall.size = glm::vec2(winSize.x, 1);
-    //            wall.pos  = glm::vec2(winCenter.x, 0);
-    //            wall.makeEntity(reg);
-    //            // bottom
-    //            wall.pos  = glm::vec2(winCenter.x, winSize.y);
-    //            wall.makeEntity(reg);
-    //        }
 }
