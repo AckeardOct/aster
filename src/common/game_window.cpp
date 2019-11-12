@@ -128,5 +128,34 @@ void GameWindow::render(float dt)
         scene->render(dt);
     }
 
+    drawGrid();
+
     SDL_RenderPresent(sdl_renderer);
+}
+
+void GameWindow::drawGrid()
+{
+    const auto& grid = config.dbgDrawGrid;
+    if (!grid.enable) {
+        return;
+    }
+
+    const glm::vec2 sz = getSize();
+    const glm::vec2 resolution(grid.resolutionX, grid.resolutionY);
+    const glm::vec2 offset(grid.offsetX, grid.offsetY);
+    glm::ivec4 color(0x00, 0xff, 0x00, 0x00);
+
+    SDL_SetRenderDrawColor(sdl_renderer, (u_char)color.r, (u_char)color.g, (u_char)color.b, (u_char)color.a);
+
+    int currX = offset.x;
+    while (currX < sz.x) {
+        SDL_RenderDrawLine(sdl_renderer, currX, 0, currX, sz.y);
+        currX += resolution.x;
+    }
+
+    int currY = offset.y;
+    while (currY < sz.y) {
+        SDL_RenderDrawLine(sdl_renderer, 0, currY, sz.x, currY);
+        currY += resolution.y;
+    }
 }

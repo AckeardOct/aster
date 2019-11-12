@@ -14,6 +14,14 @@ public:
     int fps = 30;
     std::string title = "Aster";
 
+    struct {
+        bool enable = false;
+        int resolutionX = 0;
+        int resolutionY = 0;
+        int offsetX = 0; // TODO: Vector type
+        int offsetY = 0; // TODO: Color type
+    } dbgDrawGrid;
+
 private:
     bool initByLua();
 

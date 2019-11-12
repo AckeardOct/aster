@@ -35,6 +35,20 @@ bool GameConfig::initByLua()
         fps = lua_tonumber(L, stackIdx++);
         lua_getglobal(L, "title");
         title = lua_tostring(L, stackIdx++);
+
+        { // dbgDrawGrid
+            auto& d = this->dbgDrawGrid;
+            lua_getglobal(L, "dbgDrawGrid_Enabled");
+            d.enable = lua_toboolean(L, stackIdx++);
+            lua_getglobal(L, "dbgDrawGrid_resolutionX");
+            d.resolutionX = lua_tonumber(L, stackIdx++);
+            lua_getglobal(L, "dbgDrawGrid_resolutionY");
+            d.resolutionY = lua_tonumber(L, stackIdx++);
+            lua_getglobal(L, "dbgDrawGrid_offsetX");
+            d.offsetX = lua_tonumber(L, stackIdx++);
+            lua_getglobal(L, "dbgDrawGrid_offsetY");
+            d.offsetY = lua_tonumber(L, stackIdx++);
+        }
     }
     lua_close(L);
     return true;

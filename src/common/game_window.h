@@ -2,6 +2,7 @@
 
 #include "game_config.h"
 #include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 
 class GameConfig;
 class IScene;
@@ -23,6 +24,9 @@ private:
     void processInput(float dt);
     void update(float dt);
     void render(float dt);
+
+    // dbg draw
+    void drawGrid();
 
 private:
     GameConfig config;
