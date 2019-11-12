@@ -1,5 +1,7 @@
 #include "cmp_basic.h"
 
+#include "../common/logger.h"
+
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
@@ -27,10 +29,25 @@ void MoveCmp::move(PositionCmp& posCmp, glm::vec2& direction, float dt)
     posCmp.pos.y += stepY;
 }
 
-PhysBodyCmp::PhysBodyCmp(b2World& physWorld, glm::vec2 pos, glm::vec2 size)
+static b2BodyType convToB2BodyType(PhysBodyCmp::Type type)
+{
+    switch (type) {
+    case PhysBodyCmp::Type::staticBody:
+        return b2_staticBody;
+    case PhysBodyCmp::Type::kinematicBody:
+        return b2_kinematicBody;
+    case PhysBodyCmp::Type::dynamicBody:
+        return b2_dynamicBody;
+    default:
+        LogCritical("convToB2BodyType(%d) wrong type", (int)type);
+    }
+}
+
+PhysBodyCmp::PhysBodyCmp(b2World& physWorld, Type type, glm::vec2 pos, glm::vec2 size)
 {
     b2BodyDef bodyDef;
-    bodyDef.type = b2_dynamicBody;
+    bodyDef.type = convToB2BodyType(type);
+    pos -= size / 2.f; // conv to centered pivot
     bodyDef.position.Set(pos.x, pos.y);
     this->body = physWorld.CreateBody(&bodyDef);
 

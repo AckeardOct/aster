@@ -77,5 +77,6 @@ void PhysSys::update(entt::registry& reg, float dt)
 
         posCmp.pos.x = position.x;
         posCmp.pos.y = position.y;
+        posCmp.pos += posCmp.size / 2.f; // conv to centered pivot
     }
 }

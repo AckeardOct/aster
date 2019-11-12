@@ -32,5 +32,10 @@ struct PhysBodyCmp {
     b2Body* body = nullptr;
 
 public:
-    PhysBodyCmp(b2World& physWorld, glm::vec2 pos, glm::vec2 size);
+    enum class Type {
+        staticBody = 0,
+        kinematicBody,
+        dynamicBody
+    };
+    PhysBodyCmp(b2World& physWorld, Type type, glm::vec2 pos, glm::vec2 size);
 };
