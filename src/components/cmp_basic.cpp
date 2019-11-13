@@ -29,40 +29,38 @@ void MoveCmp::move(PositionCmp& posCmp, glm::vec2& direction, float dt)
     posCmp.pos.y += stepY;
 }
 
-static b2BodyType convToB2BodyType(PhysBodyCmp::Type type)
-{
-    switch (type) {
-    case PhysBodyCmp::Type::staticBody:
-        return b2_staticBody;
-    case PhysBodyCmp::Type::kinematicBody:
-        return b2_kinematicBody;
-    case PhysBodyCmp::Type::dynamicBody:
-        return b2_dynamicBody;
-    default:
-        LogCritical("convToB2BodyType(%d) wrong type", (int)type);
-    }
-}
-
-PhysBodyCmp::PhysBodyCmp(b2World& physWorld, Type type, glm::vec2 pos, glm::vec2 size)
-    : type(type)
+PhysDynamicBodyCmp::PhysDynamicBodyCmp(b2World& physWorld, glm::vec2 pos, glm::vec2 size)
 {
     b2BodyDef bodyDef;
-    bodyDef.type = convToB2BodyType(type);
-    //pos += size / 2.f; // conv to centered pivot
+    bodyDef.type = b2_dynamicBody;
     bodyDef.position.Set(pos.x, pos.y);
     this->body = physWorld.CreateBody(&bodyDef);
 
     b2PolygonShape dynamicBox;
     size /= 2.f;
     dynamicBox.SetAsBox(size.x, size.y);
-    //    if (type != Type::staticBody) {
-    //        dynamicBox.SetAsBox(1, 1);
-    //    }
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &dynamicBox;
-    //fixtureDef.density = 1.0f;
-    //fixtureDef.friction = 0.3f;
+    fixtureDef.density = 1.0f;
+    fixtureDef.friction = 0.3f;
+
+    this->body->CreateFixture(&fixtureDef);
+}
+
+PhysStaticBodyCmp::PhysStaticBodyCmp(b2World& physWorld, glm::vec2 pos, glm::vec2 size)
+{
+    b2BodyDef bodyDef;
+    bodyDef.type = b2_staticBody;
+    bodyDef.position.Set(pos.x, pos.y);
+    this->body = physWorld.CreateBody(&bodyDef);
+
+    b2PolygonShape dynamicBox;
+    size /= 2.f;
+    dynamicBox.SetAsBox(size.x, size.y);
+
+    b2FixtureDef fixtureDef;
+    fixtureDef.shape = &dynamicBox;
 
     this->body->CreateFixture(&fixtureDef);
 }

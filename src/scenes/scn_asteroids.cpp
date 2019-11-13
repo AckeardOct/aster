@@ -89,22 +89,10 @@ void AsteroidsScene::initEntities()
         reg.assign<MoveCmp>(entity, glm::vec2(speed, speed));
         reg.assign<InputableCmp>(entity);
 
-        reg.assign<PhysBodyCmp>(entity, physWorld, PhysBodyCmp::Type::dynamicBody, pos, size);
+        reg.assign<PhysDynamicBodyCmp>(entity, physWorld, pos, size);
     }
 
-    if (false) { // plane
-        auto entity = reg.create();
-        glm::vec2 pos(200, 280);
-        glm::vec2 size(100, 20);
-        reg.assign<PositionCmp>(entity, pos, size);
-
-        glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
-        reg.assign<RectRendCmp>(entity, color, color);
-
-        reg.assign<PhysBodyCmp>(entity, physWorld, PhysBodyCmp::Type::staticBody, pos, size);
-    }
-
-    if (true) { // walls
+    { // walls
         glm::vec2 size(0, wsize.y);
         { // left
             auto entity = reg.create();
@@ -114,7 +102,7 @@ void AsteroidsScene::initEntities()
             //glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
             //reg.assign<RectRendCmp>(entity, color, color);
 
-            reg.assign<PhysBodyCmp>(entity, physWorld, PhysBodyCmp::Type::staticBody, pos, size);
+            reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
         }
         { // right
             auto entity = reg.create();
@@ -124,7 +112,7 @@ void AsteroidsScene::initEntities()
             //glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
             //reg.assign<RectRendCmp>(entity, color, color);
 
-            reg.assign<PhysBodyCmp>(entity, physWorld, PhysBodyCmp::Type::staticBody, pos, size);
+            reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
         }
         size = glm::vec2(wsize.x, 0);
         { // top
@@ -135,7 +123,7 @@ void AsteroidsScene::initEntities()
             //glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
             //reg.assign<RectRendCmp>(entity, color, color);
 
-            reg.assign<PhysBodyCmp>(entity, physWorld, PhysBodyCmp::Type::staticBody, pos, size);
+            reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
         }
         { // bottom
             auto entity = reg.create();
@@ -145,7 +133,7 @@ void AsteroidsScene::initEntities()
             //glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
             //reg.assign<RectRendCmp>(entity, color, color);
 
-            reg.assign<PhysBodyCmp>(entity, physWorld, PhysBodyCmp::Type::staticBody, pos, size);
+            reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
         }
     }
 }

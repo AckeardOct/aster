@@ -66,21 +66,16 @@ PhysSys::PhysSys(b2World& physWorld)
 
 void PhysSys::update(entt::registry& reg, float dt)
 {
-    physWorld.Step(dt, 6, 2);
-    auto physView = reg.view<PositionCmp, PhysBodyCmp>();
+    physWorld.Step(dt, 1, 1);
+    auto physView = reg.view<PositionCmp, PhysDynamicBodyCmp>();
     for (auto et : physView) {
         PositionCmp& posCmp = physView.get<PositionCmp>(et);
-        PhysBodyCmp& physBodyCmp = physView.get<PhysBodyCmp>(et);
-
-        if (physBodyCmp.type == PhysBodyCmp::Type::staticBody) {
-            continue;
-        }
+        PhysDynamicBodyCmp& physBodyCmp = physView.get<PhysDynamicBodyCmp>(et);
 
         b2Vec2 position = physBodyCmp.body->GetPosition();
         float32 angle = physBodyCmp.body->GetAngle();
 
         posCmp.pos.x = position.x;
         posCmp.pos.y = position.y;
-        //posCmp.pos += posCmp.size / 2.f; // conv to centered pivot
     }
 }
