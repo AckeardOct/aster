@@ -18,11 +18,7 @@ struct MoveCmp {
     glm::vec2 speed;
 
 public:
-    MoveCmp() = delete;
     MoveCmp(glm::vec2 speed);
-
-    void move(PositionCmp& posCmp, float dt) { move(posCmp, posCmp.direction, dt); }
-    void move(PositionCmp& posCmp, glm::vec2& direction, float dt);
 };
 
 struct InputableCmp {

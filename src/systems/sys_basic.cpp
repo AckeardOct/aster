@@ -46,13 +46,16 @@ void InputSys::update(entt::registry& reg, float dt)
         }
     }
 
-    auto moveView = reg.view<PositionCmp, MoveCmp, InputableCmp>();
-    for (auto et : moveView) {
+    auto physView = reg.view<PositionCmp, MoveCmp, PhysDynamicBodyCmp, InputableCmp>();
+    for (auto et : physView) {
         if (direction.length() > 0.1) { // TODO Check valid
             glm::normalize(direction);
-            PositionCmp& posCmp = moveView.get<PositionCmp>(et);
-            MoveCmp& moveCmp = moveView.get<MoveCmp>(et);
-            moveCmp.move(posCmp, direction, dt);
+            PositionCmp& posCmp = physView.get<PositionCmp>(et);
+            MoveCmp& moveCmp = physView.get<MoveCmp>(et);
+            PhysDynamicBodyCmp& bodyCmp = physView.get<PhysDynamicBodyCmp>(et);
+
+            b2Vec2 impulse(direction.x * moveCmp.speed.x, direction.y * moveCmp.speed.y);
+            bodyCmp.body->SetLinearVelocity(impulse);
         }
     }
 
@@ -66,7 +69,6 @@ PhysSys::PhysSys(b2World& physWorld)
 
 void PhysSys::update(entt::registry& reg, float dt)
 {
-    physWorld.Step(dt, 1, 1);
     auto physView = reg.view<PositionCmp, PhysDynamicBodyCmp>();
     for (auto et : physView) {
         PositionCmp& posCmp = physView.get<PositionCmp>(et);
