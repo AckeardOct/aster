@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../common/math_utils.h"
+#include "common/math_utils.h"
 
 class RectRendCmp {
 public:

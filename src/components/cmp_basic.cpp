@@ -1,6 +1,6 @@
 #include "cmp_basic.h"
 
-#include "../common/logger.h"
+#include "common/logger.h"
 
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 #include <Box2D/Dynamics/b2Body.h>

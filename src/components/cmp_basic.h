@@ -1,6 +1,7 @@
 #pragma once
 
-#include "../common/math_utils.h"
+#include "common/math_utils.h"
+
 #include <Box2D/Dynamics/b2World.h>
 
 class b2Body;

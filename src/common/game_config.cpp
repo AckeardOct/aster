@@ -1,6 +1,7 @@
 #include "game_config.h"
 
-#include "logger.h"
+#include "common/logger.h"
+
 #include <lua/lua.hpp>
 #include <sstream>
 

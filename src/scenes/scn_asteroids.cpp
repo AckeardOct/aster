@@ -1,9 +1,9 @@
 #include "scn_asteroids.h"
 
-#include "../components/cmp_basic.h"
-#include "../components/cmp_render.h"
-#include "../systems/sys_basic.h"
-#include "../systems/sys_render.h"
+#include "components/cmp_basic.h"
+#include "components/cmp_render.h"
+#include "systems/sys_basic.h"
+#include "systems/sys_render.h"
 
 #include <SDL2/SDL_render.h>
 

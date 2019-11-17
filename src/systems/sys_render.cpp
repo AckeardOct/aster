@@ -1,8 +1,8 @@
 #include "sys_render.h"
 
-#include "../common/math_utils.h"
-#include "../components/cmp_basic.h"
-#include "../components/cmp_render.h"
+#include "common/math_utils.h"
+#include "components/cmp_basic.h"
+#include "components/cmp_render.h"
 
 #include <SDL2/SDL_render.h>
 

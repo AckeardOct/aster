@@ -1,7 +1,7 @@
 #include "sys_basic.h"
 
-#include "../common/math_utils.h"
-#include "../components/cmp_basic.h"
+#include "common/math_utils.h"
+#include "components/cmp_basic.h"
 
 #include <Box2D/Dynamics/b2Body.h>
 #include <SDL2/SDL_events.h>

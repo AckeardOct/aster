@@ -26,21 +26,11 @@ set(PROJECT_DEPS
     gtest
     lua)
 
-set(common-src
-    src/common/game_config.cpp
-    src/common/game_window.cpp
-    src/common/math_utils.cpp)
-
-set(components-src
-    src/components/cmp_basic.cpp
-    src/components/cmp_render.cpp)
-
-set(scenes-src
-    src/scenes/scn_asteroids.cpp)
-
-set(systems-src
-    src/systems/sys_basic.cpp
-    src/systems/sys_render.cpp)
+include_directories(src)
+include(src/common/src.cmake)
+include(src/components/src.cmake)
+include(src/scenes/src.cmake)
+include(src/systems/src.cmake)
 
 set(all-src
     src/main.cpp

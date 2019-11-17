@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../common/game_window.h"
+#include "common/game_window.h"
 #include <SDL2/SDL_events.h>
 
 class GameWindow;

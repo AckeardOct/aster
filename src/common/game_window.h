@@ -1,7 +1,7 @@
 #pragma once
 
-#include "game_config.h"
-#include "math_utils.h"
+#include "common/game_config.h"
+#include "common/math_utils.h"
 
 class GameConfig;
 class IScene;

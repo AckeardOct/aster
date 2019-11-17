@@ -2,8 +2,8 @@
 
 #include <SDL2/SDL.h>
 
-#include "../scenes/scn_asteroids.h"
-#include "logger.h"
+#include "common/logger.h"
+#include "scenes/scn_asteroids.h"
 
 GameWindow::GameWindow(int argc, char** argv)
     : config(argc, argv)
