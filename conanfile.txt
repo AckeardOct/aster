@@ -5,4 +5,4 @@ box2d/2.3.2.ef96a4f@conan/stable
 eigen/3.3.7@conan/stable
 
 [generators]
-qmake
+cmake
