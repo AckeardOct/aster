@@ -1,30 +1,37 @@
 #!/usr/bin/env python
 
+
 def ABS_PATH(path):
     from os.path import abspath
     return abspath(path)
+
 
 def JOIN_PATH(left, right):
     from os.path import join
     return join(left, right)
 
+
 def EXISTS(path):
     from os.path import exists
     return exists(path)
 
+
 def MK_DIRS(path):
     from os import makedirs
     return makedirs(path)
+
 
 def RM_DIRS(path):
     from shutil import rmtree
     if EXISTS(path):
         rmtree(path)
 
+
 def RM_FILE(path):
     from os import remove
     if EXISTS(path):
         remove(path)
+
 
 def EXECUTE(cmd):
     from os import system
@@ -34,6 +41,7 @@ def EXECUTE(cmd):
     return system(cmd)
 
 # ========== SCRIPT ========== #
+
 
 build_dir = ABS_PATH("./build")
 
@@ -61,7 +69,8 @@ def gtest():
     gtest_dir = JOIN_PATH(build_dir, 'gtest')
     RM_DIRS(gtest_dir)
     MK_DIRS(gtest_dir)
-    cmd = str.format("git clone https://github.com/google/googletest.git {}", gtest_dir)
+    cmd = str.format(
+        "git clone https://github.com/google/googletest.git {}", gtest_dir)
     EXECUTE(cmd)
 
     gtest_build_dir = JOIN_PATH(gtest_dir, 'build')
@@ -81,7 +90,8 @@ def lua():
     RM_DIRS(lua_dir)
 
     lua_tar = lua_dir + ".tar.gz"
-    cmd = str.format("wget 'https://www.lua.org/ftp/lua-5.3.5.tar.gz' -O {}", lua_tar)
+    cmd = str.format(
+        "wget 'https://www.lua.org/ftp/lua-5.3.5.tar.gz' -O {}", lua_tar)
     EXECUTE(cmd)
 
     cmd = str.format("tar xzf {} -C {}", lua_tar, build_dir)
@@ -90,6 +100,14 @@ def lua():
 
     cmd = str.format("make linux local -C {}", lua_dir)
     EXECUTE(cmd)
+
+    lua_install_dir = JOIN_PATH(lua_dir, 'install')
+    lua_include_dir = JOIN_PATH(lua_install_dir, 'include')
+    lua_include_lua_dir = JOIN_PATH(lua_include_dir, 'lua')
+    MK_DIRS(lua_include_lua_dir)
+    cmd = str.format("mv {}/*.h* {}", lua_include_dir, lua_include_lua_dir)
+    EXECUTE(cmd)
+
     print("========== lua installed ==========")
 
 
