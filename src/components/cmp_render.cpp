@@ -1,6 +1,6 @@
 #include "cmp_render.h"
 
-RectRendCmp::RectRendCmp(glm::ivec4 borderColor, glm::ivec4 fillColor)
+RectRendCmp::RectRendCmp(Color borderColor, Color fillColor)
     : borderColor(borderColor)
     , fillColor(fillColor)
 {

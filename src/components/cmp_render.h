@@ -1,12 +1,12 @@
 #pragma once
 
-#include <glm/vec4.hpp>
+#include "../common/math_utils.h"
 
 class RectRendCmp {
 public:
-    RectRendCmp(glm::ivec4 borderColor, glm::ivec4 fillColor = glm::ivec4 { 0 });
+    RectRendCmp(Color borderColor, Color fillColor = Color(0, 0, 0, 0));
 
 public:
-    glm::ivec4 borderColor;
-    glm::ivec4 fillColor;
+    Color borderColor;
+    Color fillColor;
 };

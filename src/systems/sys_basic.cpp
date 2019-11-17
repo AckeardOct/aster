@@ -1,10 +1,10 @@
 #include "sys_basic.h"
 
+#include "../common/math_utils.h"
 #include "../components/cmp_basic.h"
 
 #include <Box2D/Dynamics/b2Body.h>
 #include <SDL2/SDL_events.h>
-#include <glm/glm.hpp>
 
 void InputSys::onInput(const SDL_Event& event)
 {
@@ -26,21 +26,21 @@ void InputSys::onInput(const SDL_Event& event)
 
 void InputSys::update(entt::registry& reg, float dt)
 {
-    glm::vec2 direction(0, 0);
+    Vec2f direction(0, 0);
     for (auto& iter : keys) {
         if (iter.second) {
             switch (iter.first) {
             case SDLK_UP:
-                direction.y -= 1.f;
+                direction.y() -= 1.f;
                 break;
             case SDLK_DOWN:
-                direction.y += 1.f;
+                direction.y() += 1.f;
                 break;
             case SDLK_LEFT:
-                direction.x -= 1.f;
+                direction.x() -= 1.f;
                 break;
             case SDLK_RIGHT:
-                direction.x += 1.f;
+                direction.x() += 1.f;
                 break;
             }
         }
@@ -48,13 +48,13 @@ void InputSys::update(entt::registry& reg, float dt)
 
     auto physView = reg.view<PositionCmp, MoveCmp, PhysDynamicBodyCmp, InputableCmp>();
     for (auto et : physView) {
-        if (direction.length() > 0.1) { // TODO Check valid
-            glm::normalize(direction);
+        if (!direction.isZero()) {
+            direction.normalize();
             PositionCmp& posCmp = physView.get<PositionCmp>(et);
             MoveCmp& moveCmp = physView.get<MoveCmp>(et);
             PhysDynamicBodyCmp& bodyCmp = physView.get<PhysDynamicBodyCmp>(et);
 
-            b2Vec2 impulse(direction.x * moveCmp.speed.x, direction.y * moveCmp.speed.y);
+            b2Vec2 impulse(direction.x() * moveCmp.speed.x(), direction.y() * moveCmp.speed.y());
             bodyCmp.body->SetLinearVelocity(impulse);
         }
     }
@@ -77,7 +77,7 @@ void PhysSys::update(entt::registry& reg, float dt)
         b2Vec2 position = physBodyCmp.body->GetPosition();
         float32 angle = physBodyCmp.body->GetAngle();
 
-        posCmp.pos.x = position.x;
-        posCmp.pos.y = position.y;
+        posCmp.pos.x() = position.x;
+        posCmp.pos.y() = position.y;
     }
 }

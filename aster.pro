@@ -18,6 +18,7 @@ include($$GTEST_PATH/gtest.pri)
 SOURCES += \
         src/common/game_config.cpp \
         src/common/game_window.cpp \
+        src/common/math_utils.cpp \
         src/components/cmp_basic.cpp \
         src/components/cmp_render.cpp \
         src/main.cpp \
@@ -29,6 +30,7 @@ HEADERS += \
     src/common/game_config.h \
     src/common/game_window.h \
     src/common/logger.h \
+    src/common/math_utils.h \
     src/components/cmp_basic.h \
     src/components/cmp_render.h \
     src/scenes/i_scene.h \

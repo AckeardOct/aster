@@ -1,8 +1,7 @@
 #pragma once
 
 #include "game_config.h"
-#include <glm/vec2.hpp>
-#include <glm/vec4.hpp>
+#include "math_utils.h"
 
 class GameConfig;
 class IScene;
@@ -15,8 +14,8 @@ public:
     ~GameWindow();
 
     void runLoop();
-    glm::vec2 getSize() const;
-    glm::vec2 getCenter() const;
+    Vec2f getSize() const;
+    Vec2f getCenter() const;
     SDL_Renderer& getRenderer();
 
 private:

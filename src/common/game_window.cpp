@@ -52,14 +52,14 @@ void GameWindow::runLoop()
     }
 }
 
-glm::vec2 GameWindow::getSize() const
+Vec2f GameWindow::getSize() const
 {
     int w, h;
     SDL_GetWindowSize(sdl_window, &w, &h);
-    return glm::vec2(w, h);
+    return Vec2f(w, h);
 }
 
-glm::vec2 GameWindow::getCenter() const
+Vec2f GameWindow::getCenter() const
 {
     return getSize() / 2.f;
 }
@@ -140,22 +140,22 @@ void GameWindow::drawGrid()
         return;
     }
 
-    const glm::vec2 sz = getSize();
-    const glm::vec2 resolution(grid.resolutionX, grid.resolutionY);
-    const glm::vec2 offset(grid.offsetX, grid.offsetY);
-    glm::ivec4 color(0x00, 0xff, 0x00, 0x00);
+    const Vec2f sz = getSize();
+    const Vec2f resolution(grid.resolutionX, grid.resolutionY);
+    const Vec2f offset(grid.offsetX, grid.offsetY);
+    const Color color(0x00, 0xff, 0x00, 0x00);
 
     SDL_SetRenderDrawColor(sdl_renderer, (u_char)color.r, (u_char)color.g, (u_char)color.b, (u_char)color.a);
 
-    int currX = offset.x;
-    while (currX < sz.x) {
-        SDL_RenderDrawLine(sdl_renderer, currX, 0, currX, sz.y);
-        currX += resolution.x;
+    int currX = offset.x();
+    while (currX < sz.x()) {
+        SDL_RenderDrawLine(sdl_renderer, currX, 0, currX, sz.y());
+        currX += resolution.x();
     }
 
-    int currY = offset.y;
-    while (currY < sz.y) {
-        SDL_RenderDrawLine(sdl_renderer, 0, currY, sz.x, currY);
-        currY += resolution.y;
+    int currY = offset.y();
+    while (currY < sz.y()) {
+        SDL_RenderDrawLine(sdl_renderer, 0, currY, sz.x(), currY);
+        currY += resolution.y();
     }
 }

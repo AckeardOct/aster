@@ -1,24 +1,24 @@
 #pragma once
 
+#include "../common/math_utils.h"
 #include <Box2D/Dynamics/b2World.h>
-#include <glm/vec2.hpp>
 
 class b2Body;
 
 struct PositionCmp {
-    glm::vec2 pos;
-    glm::vec2 size;
-    glm::vec2 direction;
+    Vec2f pos;
+    Vec2f size;
+    Vec2f direction;
 
 public:
-    PositionCmp(glm::vec2 pos, glm::vec2 size, glm::vec2 direction = glm::vec2(0.f, 0.f));
+    PositionCmp(Vec2f pos, Vec2f size, Vec2f direction = Vec2f(0.f, 0.f));
 };
 
 struct MoveCmp {
-    glm::vec2 speed;
+    Vec2f speed;
 
 public:
-    MoveCmp(glm::vec2 speed);
+    MoveCmp(Vec2f speed);
 };
 
 struct InputableCmp {
@@ -28,12 +28,12 @@ struct PhysDynamicBodyCmp {
     b2Body* body = nullptr;
 
 public:
-    PhysDynamicBodyCmp(b2World& physWorld, glm::vec2 pos, glm::vec2 size);
+    PhysDynamicBodyCmp(b2World& physWorld, Vec2f pos, Vec2f size);
 };
 
 struct PhysStaticBodyCmp {
     b2Body* body = nullptr;
 
 public:
-    PhysStaticBodyCmp(b2World& physWorld, glm::vec2 pos, glm::vec2 size);
+    PhysStaticBodyCmp(b2World& physWorld, Vec2f pos, Vec2f size);
 };

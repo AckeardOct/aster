@@ -6,28 +6,28 @@
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 
-PositionCmp::PositionCmp(glm::vec2 pos, glm::vec2 size, glm::vec2 direction)
+PositionCmp::PositionCmp(Vec2f pos, Vec2f size, Vec2f direction)
     : pos(pos)
     , size(size)
     , direction(direction)
 {
 }
 
-MoveCmp::MoveCmp(glm::vec2 speed)
+MoveCmp::MoveCmp(Vec2f speed)
     : speed(speed)
 {
 }
 
-PhysDynamicBodyCmp::PhysDynamicBodyCmp(b2World& physWorld, glm::vec2 pos, glm::vec2 size)
+PhysDynamicBodyCmp::PhysDynamicBodyCmp(b2World& physWorld, Vec2f pos, Vec2f size)
 {
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(pos.x, pos.y);
+    bodyDef.position.Set(pos.x(), pos.y());
     this->body = physWorld.CreateBody(&bodyDef);
 
     b2PolygonShape dynamicBox;
     size /= 2.f;
-    dynamicBox.SetAsBox(size.x, size.y);
+    dynamicBox.SetAsBox(size.x(), size.y());
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &dynamicBox;
@@ -37,16 +37,16 @@ PhysDynamicBodyCmp::PhysDynamicBodyCmp(b2World& physWorld, glm::vec2 pos, glm::v
     this->body->CreateFixture(&fixtureDef);
 }
 
-PhysStaticBodyCmp::PhysStaticBodyCmp(b2World& physWorld, glm::vec2 pos, glm::vec2 size)
+PhysStaticBodyCmp::PhysStaticBodyCmp(b2World& physWorld, Vec2f pos, Vec2f size)
 {
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
-    bodyDef.position.Set(pos.x, pos.y);
+    bodyDef.position.Set(pos.x(), pos.y());
     this->body = physWorld.CreateBody(&bodyDef);
 
     b2PolygonShape dynamicBox;
     size /= 2.f;
-    dynamicBox.SetAsBox(size.x, size.y);
+    dynamicBox.SetAsBox(size.x(), size.y());
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &dynamicBox;

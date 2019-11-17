@@ -1,8 +1,8 @@
 [requires]
-glm/0.9.9.5@g-truc/stable
 sdl2/2.0.10@bincrafters/stable
 entt/3.2.0-RC1@skypjack/stable
 box2d/2.3.2.ef96a4f@conan/stable
+eigen/3.3.7@conan/stable
 
 [generators]
 qmake

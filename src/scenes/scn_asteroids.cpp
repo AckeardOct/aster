@@ -6,8 +6,6 @@
 #include "../systems/sys_render.h"
 
 #include <SDL2/SDL_render.h>
-#include <glm/vec2.hpp>
-#include <glm/vec4.hpp>
 
 AsteroidsScene::AsteroidsScene(GameWindow& window)
     : IScene(window)
@@ -73,20 +71,20 @@ void AsteroidsScene::initRenderSystems()
 
 void AsteroidsScene::initEntities()
 {
-    const glm::vec2 wsize = window.getSize();
-    const glm::vec2 wcenter = window.getCenter();
+    const Vec2f wsize = window.getSize();
+    const Vec2f wcenter = window.getCenter();
 
     { // player
         auto entity = reg.create();
-        glm::vec2 pos(wcenter.x, wcenter.y);
-        glm::vec2 size(glm::vec2(20, 20));
+        Vec2f pos(wcenter.x(), wcenter.y());
+        Vec2f size(20.f, 20.f);
         reg.assign<PositionCmp>(entity, pos, size);
 
-        glm::ivec4 color(0xff, 0x00, 0x00, 0x00);
+        Color color(0xff, 0x00, 0x00, 0x00);
         reg.assign<RectRendCmp>(entity, color, color);
 
         float speed = 100.f;
-        reg.assign<MoveCmp>(entity, glm::vec2(speed, speed));
+        reg.assign<MoveCmp>(entity, Vec2f(speed, speed));
         reg.assign<InputableCmp>(entity);
 
         reg.assign<PhysDynamicBodyCmp>(entity, physWorld, pos, size);
@@ -94,50 +92,50 @@ void AsteroidsScene::initEntities()
 
     { // cube
         auto entity = reg.create();
-        glm::vec2 pos(wcenter.x - 40, wcenter.y);
-        glm::vec2 size(glm::vec2(20, 20));
+        Vec2f pos(wcenter.x() - 40, wcenter.y());
+        Vec2f size(Vec2f(20, 20));
         reg.assign<PositionCmp>(entity, pos, size);
 
-        glm::ivec4 color(0x00, 0xff, 0x00, 0x00);
+        Color color(0x00, 0xff, 0x00, 0x00);
         reg.assign<RectRendCmp>(entity, color, color);
         reg.assign<PhysDynamicBodyCmp>(entity, physWorld, pos, size);
     }
 
     { // platform
         auto entity = reg.create();
-        glm::vec2 size(wcenter.x / 2, 10);
-        glm::vec2 pos(wcenter.x, wsize.y * 0.75);
+        Vec2f size(wcenter.x() / 2, 10);
+        Vec2f pos(wcenter.x(), wsize.y() * 0.75);
         reg.assign<PositionCmp>(entity, pos, size);
 
-        glm::ivec4 color(0x00, 0x00, 0xff, 0x00);
+        Color color(0x00, 0x00, 0xff, 0x00);
         reg.assign<RectRendCmp>(entity, color, color);
         reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
     }
 
     { // walls
-        glm::vec2 size(0, wsize.y);
+        Vec2f size(0, wsize.y());
         { // left
             auto entity = reg.create();
-            glm::vec2 pos(-1, wcenter.y);
+            Vec2f pos(-1, wcenter.y());
             reg.assign<PositionCmp>(entity, pos, size);
             reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
         }
         { // right
             auto entity = reg.create();
-            glm::vec2 pos(wsize.x + 1, wcenter.y);
+            Vec2f pos(wsize.x() + 1, wcenter.y());
             reg.assign<PositionCmp>(entity, pos, size);
             reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
         }
-        size = glm::vec2(wsize.x, 0);
+        size = Vec2f(wsize.x(), 0);
         { // top
             auto entity = reg.create();
-            glm::vec2 pos(wcenter.x, -1);
+            Vec2f pos(wcenter.x(), -1);
             reg.assign<PositionCmp>(entity, pos, size);
             reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
         }
         { // bottom
             auto entity = reg.create();
-            glm::vec2 pos(wcenter.x, wsize.y + 1);
+            Vec2f pos(wcenter.x(), wsize.y() + 1);
             reg.assign<PositionCmp>(entity, pos, size);
             reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
         }
