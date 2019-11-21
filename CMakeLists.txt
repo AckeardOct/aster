@@ -21,10 +21,16 @@ link_directories(${LUA_DIR}/install/lib)
 include_directories(${LUA_DIR}/install/include)
 
 
+set(RTTR_DIR ${CMAKE_SOURCE_DIR}/build/rttr)
+link_directories(${RTTR_DIR}/build/lib)
+include_directories(${RTTR_DIR}/build/include)
+
+
 set(PROJECT_DEPS
     ${CONAN_LIBS}
     gtest
-    lua)
+    lua
+    rttr_core)
 
 include_directories(src)
 include(src/common/src.cmake)

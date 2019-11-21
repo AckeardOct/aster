@@ -77,6 +77,53 @@ TEST(Lua, ReadTable)
     lua_close(L);
 }
 
+struct Player {
+    std::string Title;
+    std::string Name;
+    std::string Family;
+    int Level;
+};
+
+TEST(Lua, ReadStruct)
+{
+    const std::string scriptFile = SCRIPTS_TEST_DIR + "read_table.lua";
+    lua_State* L = luaL_newstate();
+    int r = luaL_dofile(L, scriptFile.c_str());
+    EXPECT_EQ(LUA_OK, r);
+
+    Player player;
+
+    { // table PLAYER
+        lua_getglobal(L, "player");
+        EXPECT_TRUE(lua_istable(L, -1));
+
+        { // Name
+            lua_pushstring(L, "Name");
+            lua_gettable(L, -2);
+            player.Name = lua_tostring(L, -1);
+            EXPECT_STREQ("Ciaran", player.Name.c_str());
+            lua_pop(L, 1);
+        }
+
+        { // Title
+            lua_pushstring(L, "Title");
+            lua_gettable(L, -2);
+            player.Title = lua_tostring(L, -1);
+            EXPECT_STREQ("Squire", player.Title.c_str());
+            lua_pop(L, 1);
+        }
+
+        { // Level
+            lua_pushstring(L, "Level");
+            lua_gettable(L, -2);
+            player.Level = lua_tonumber(L, -1);
+            EXPECT_EQ(20, player.Level);
+            lua_pop(L, 1);
+        }
+    }
+    lua_close(L);
+}
+
 int lua_HostFunction(lua_State* L)
 {
     float a = (float)lua_tonumber(L, 1);
