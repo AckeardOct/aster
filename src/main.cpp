@@ -3,6 +3,7 @@
 #include <gtest/gtest.h>
 
 #include "tests/test_lua.h"
+#include "tests/test_rttr.h"
 
 int main(int argc, char** argv)
 {
