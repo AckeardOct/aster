@@ -41,11 +41,11 @@ include(src/tests/src.cmake)
 
 set(all-src
     src/main.cpp
+    ${test-src}
     ${common-src}
     ${components-src}
     ${scenes-src}
-    ${systems-src}
-    ${test-stc})
+    ${systems-src})
 
 add_executable(${PROJECT_NAME} ${all-src})
 target_link_libraries(${PROJECT_NAME} ${PROJECT_DEPS})

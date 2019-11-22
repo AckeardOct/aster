@@ -1,9 +1,8 @@
-#pragma once
-
 #include <gtest/gtest.h>
 #include <rttr/registration>
 
-static int doubler(int x) {
+static int doubler(int x)
+{
     return x * 2;
 };
 
@@ -20,15 +19,15 @@ RTTR_REGISTRATION
     registration::method("doubler", &doubler);
 
     registration::class_<Bar>("Bar")
-            .property("one",   &Bar::one)
-            .property("two",   &Bar::two)
-            .property("three", &Bar::three)
-            .property("four",  &Bar::four);
+        .property("one", &Bar::one)
+        .property("two", &Bar::two)
+        .property("three", &Bar::three)
+        .property("four", &Bar::four);
 }
 
 TEST(RttR, Function)
 {
-    EXPECT_EQ(30, rttr::type::invoke("doubler", {15}).to_int());
+    EXPECT_EQ(30, rttr::type::invoke("doubler", { 15 }).to_int());
 }
 
 TEST(RttR, SimpleStruct)

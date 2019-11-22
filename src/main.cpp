@@ -2,9 +2,6 @@
 
 #include <gtest/gtest.h>
 
-#include "tests/test_lua.h"
-#include "tests/test_rttr.h"
-
 int main(int argc, char** argv)
 {
     ::testing::InitGoogleTest(&argc, argv);
@@ -17,9 +14,4 @@ int main(int argc, char** argv)
     window.runLoop();
 
     return 0;
-}
-
-TEST(SimpleTest, Primitive)
-{
-    EXPECT_EQ(true, true);
 }
