@@ -1,11 +1,28 @@
 #include "game_config.h"
-
 #include "common/logger.h"
-
-#include <lua/lua.hpp>
-#include <sstream>
+#include "refl/refl_lua.h"
 
 #include <SDL2/SDL.h>
+#include <lua/lua.hpp>
+#include <rttr/registration>
+#include <sstream>
+
+RTTR_REGISTRATION
+{
+    using namespace rttr;
+    registration::class_<WindowCfg>("WindowCfg")
+        .property("width", &WindowCfg::width)
+        .property("height", &WindowCfg::height)
+        .property("fps", &WindowCfg::fps)
+        .property("title", &WindowCfg::title);
+
+    registration::class_<DbgGridCfg>("DbgGridCfg")
+        .property("enable", &DbgGridCfg::enable)
+        .property("resolutionX", &DbgGridCfg::resolutionX)
+        .property("resolutionY", &DbgGridCfg::resolutionY)
+        .property("offsetX", &DbgGridCfg::offsetX)
+        .property("offsetY", &DbgGridCfg::offsetY);
+}
 
 GameConfig::GameConfig(int argc, char** argv)
 {
@@ -17,42 +34,16 @@ std::string GameConfig::toString() const
 {
     std::stringstream ret;
     ret << "luaConfigFile: '" << luaConfigFile << "'";
-    ret << ", width: " << width;
-    ret << ", height: " << height;
-    ret << ", fps: " << fps;
-    ret << ", titls: '" << title << "'";
+    ret << ", width: " << window.width;
+    ret << ", height: " << window.height;
+    ret << ", fps: " << window.fps;
+    ret << ", titls: '" << window.title << "'";
     return ret.str();
 }
 
 bool GameConfig::initByLua()
 {
-    lua_State* L = luaL_newstate();
-    luaL_dofile(L, luaConfigFile);
-    {
-        int stackIdx = 1;
-        lua_getglobal(L, "width");
-        width = lua_tonumber(L, stackIdx++);
-        lua_getglobal(L, "height");
-        height = lua_tonumber(L, stackIdx++);
-        lua_getglobal(L, "fps");
-        fps = lua_tonumber(L, stackIdx++);
-        lua_getglobal(L, "title");
-        title = lua_tostring(L, stackIdx++);
-
-        { // dbgDrawGrid
-            auto& d = this->dbgDrawGrid;
-            lua_getglobal(L, "dbgDrawGrid_Enabled");
-            d.enable = lua_toboolean(L, stackIdx++);
-            lua_getglobal(L, "dbgDrawGrid_resolutionX");
-            d.resolutionX = lua_tonumber(L, stackIdx++);
-            lua_getglobal(L, "dbgDrawGrid_resolutionY");
-            d.resolutionY = lua_tonumber(L, stackIdx++);
-            lua_getglobal(L, "dbgDrawGrid_offsetX");
-            d.offsetX = lua_tonumber(L, stackIdx++);
-            lua_getglobal(L, "dbgDrawGrid_offsetY");
-            d.offsetY = lua_tonumber(L, stackIdx++);
-        }
-    }
-    lua_close(L);
+    readLuaTable(luaConfigFile, "window", window);
+    readLuaTable(luaConfigFile, "dbgGrid", dbgDrawGrid);
     return true;
 }

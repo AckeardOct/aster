@@ -37,6 +37,7 @@ include(src/common/src.cmake)
 include(src/components/src.cmake)
 include(src/scenes/src.cmake)
 include(src/systems/src.cmake)
+include (src/refl/src.cmake)
 include(src/tests/src.cmake)
 
 set(all-src
@@ -45,7 +46,8 @@ set(all-src
     ${common-src}
     ${components-src}
     ${scenes-src}
-    ${systems-src})
+    ${systems-src}
+    ${refl-src})
 
 add_executable(${PROJECT_NAME} ${all-src})
 target_link_libraries(${PROJECT_NAME} ${PROJECT_DEPS})

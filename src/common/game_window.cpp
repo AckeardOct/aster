@@ -28,7 +28,7 @@ GameWindow::~GameWindow()
 
 void GameWindow::runLoop()
 {
-    const float frameLength_ms = 1000.f / config.fps;
+    const float frameLength_ms = 1000.f / config.window.fps;
     float dt = 0;
     uint32_t time_ms = SDL_GetTicks();
     while (!quitRequested) {
@@ -77,11 +77,11 @@ void GameWindow::initSDL()
         ASSERT_FAIL("SDL_Init(SDL_INIT_VIDEO) failed. error: %s", SDL_GetError());
     }
 
-    sdl_window = SDL_CreateWindow(config.title.c_str(),
+    sdl_window = SDL_CreateWindow(config.window.title.c_str(),
         SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED,
-        config.width,
-        config.height,
+        config.window.width,
+        config.window.height,
         SDL_WINDOW_SHOWN);
     if (sdl_window == nullptr) {
         ASSERT_FAIL("SDL_CreateWindow() failed. error: %s", SDL_GetError());
