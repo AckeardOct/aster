@@ -69,10 +69,13 @@ def welcome():
 def conan():
     print("\n\nConan install")
     print("========================")
+    cmd = "conan remote add bincrafters https://api.bintray.com/conan/bincrafters/public-conan"
+    EXECUTE(cmd)
+
     conan_dir = JOIN_PATH(build_dir, 'conan')
     RM_DIRS(conan_dir)
     MK_DIRS(conan_dir)
-    cmd = str.format("conan install ./conanfile.txt -if {}", conan_dir)
+    cmd = str.format("conan install ./conanfile.txt -if {} --build=missing", conan_dir)
     EXECUTE(cmd)
     print("========== Conan installed ==========")
 

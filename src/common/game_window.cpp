@@ -9,7 +9,6 @@ GameWindow::GameWindow(int argc, char** argv)
     : config(argc, argv)
 {
     this->initSDL();
-
     scene = new AsteroidsScene(*this);
 }
 
@@ -67,7 +66,7 @@ Vec2f GameWindow::getCenter() const
 SDL_Renderer& GameWindow::getRenderer()
 {
     if (sdl_renderer == nullptr) {
-        LogCritical("sdl_renderer is null");
+        ASSERT_FAIL("sdl_renderer is null");
     }
     return *sdl_renderer;
 }
@@ -75,7 +74,7 @@ SDL_Renderer& GameWindow::getRenderer()
 void GameWindow::initSDL()
 {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        LogCritical("SDL_Init(SDL_INIT_VIDEO) failed. error: %s", SDL_GetError());
+        ASSERT_FAIL("SDL_Init(SDL_INIT_VIDEO) failed. error: %s", SDL_GetError());
     }
 
     sdl_window = SDL_CreateWindow(config.title.c_str(),
@@ -85,12 +84,12 @@ void GameWindow::initSDL()
         config.height,
         SDL_WINDOW_SHOWN);
     if (sdl_window == nullptr) {
-        LogCritical("SDL_CreateWindow() failed. error: %s", SDL_GetError());
+        ASSERT_FAIL("SDL_CreateWindow() failed. error: %s", SDL_GetError());
     }
 
     sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED);
     if (sdl_renderer == nullptr) {
-        LogCritical("SDL_CreateRenderer() failed. error: %s", SDL_GetError());
+        ASSERT_FAIL("SDL_CreateRenderer() failed. error: %s", SDL_GetError());
     }
 
     LogMsg("initSDL() success!");

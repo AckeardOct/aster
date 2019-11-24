@@ -5,6 +5,8 @@
 #include <lua/lua.hpp>
 #include <sstream>
 
+#include <SDL2/SDL.h>
+
 GameConfig::GameConfig(int argc, char** argv)
 {
     initByLua();
