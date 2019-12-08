@@ -416,3 +416,45 @@ TEST(Sol2, CppLua)
     lua.script_file(preludeScript);
     lua.script_file(playerScript);
 }
+
+TEST(Sol2, ReadConfig)
+{
+    const std::string usertypeScript = SCRIPTS_TEST_DIR + "/usertype.lua";
+
+    struct SomeData {
+        int one = 0;
+        float two = 0;
+        bool three = false;
+        std::string str;
+
+        SomeData() {}
+        SomeData(int one, float two, bool three, std::string str)
+            : one(one)
+            , two(two)
+            , three(three)
+            , str(str)
+        {
+        }
+    };
+
+    sol::state lua;
+    { // bind type
+        sol::usertype<SomeData> type = lua.new_usertype<SomeData>("natSomeData",
+            sol::constructors<
+                SomeData(),
+                SomeData(int, float, bool, std::string)>());
+        type["one"] = &SomeData::one;
+        type["two"] = &SomeData::two;
+        type["three"] = &SomeData::three;
+        type["str"] = &SomeData::str;
+    }
+
+    lua.script_file(usertypeScript);
+    SomeData data = lua.get<SomeData>("someData");
+    EXPECT_EQ(1488, data.one);
+    EXPECT_EQ("Hello World", data.str);
+
+    SomeData data2 = lua.get<SomeData>("someData2");
+    EXPECT_EQ(1, data2.one);
+    EXPECT_EQ("LOL", data2.str);
+}
