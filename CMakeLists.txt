@@ -26,6 +26,9 @@ link_directories(${RTTR_DIR}/build/lib)
 include_directories(${RTTR_DIR}/build/include)
 
 
+set(SOL2_DIR ${CMAKE_SOURCE_DIR}/build/sol2)
+include_directories(${SOL2_DIR}/single/single/include)
+
 set(PROJECT_DEPS
     ${CONAN_LIBS}
     gtest

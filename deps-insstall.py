@@ -177,12 +177,29 @@ def rttr():
     print("========== RttR installed ==========")
 
 
+def sol2():
+    print("\n\nSol2 install")
+    print("========================")
+    sol2_dir = JOIN_PATH(build_dir, 'sol2')
+    RM_DIRS(sol2_dir)
+    MK_DIRS(sol2_dir)
+    github_url = 'https://github.com/ThePhD/sol2.git'
+    cmd = str.format("git clone {} {}", github_url, sol2_dir)
+    EXECUTE(cmd)
+
+    sol2_single_build_dir = JOIN_PATH(sol2_dir, 'single')
+    cmd = str.format('cd {0} && python3 {0}/single.py', sol2_single_build_dir)
+    EXECUTE(cmd)
+    print("========== Sol2 installed ==========")
+
+
 if __name__ == "__main__":
     welcome()
     conan()
     gtest()
     lua()
     rttr()
+    sol2()
 
 
 
