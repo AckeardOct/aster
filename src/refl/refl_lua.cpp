@@ -3,78 +3,77 @@
 
 #include <lua/lua.hpp>
 #include <memory>
+#include <sol/sol.hpp>
 
-int readLuaInt(lua_State& L, const char* name)
+static bool __readSubTable(rttr::instance obj, rttr::property prop, sol::table subTable);
+
+template <class LuaVal>
+bool __readProperty(rttr::instance obj, rttr::property prop, LuaVal luaVal)
 {
-    lua_pushstring(&L, name);
-    lua_gettable(&L, -2);
+    // LuaVal is sol::optional type
+    if (rttr::type::get<int>() == prop.get_type()) {
+        int val = luaVal.value();
+        prop.set_value(obj, val);
+    } else if (rttr::type::get<float>() == prop.get_type()) {
+        float val = luaVal.value();
+        prop.set_value(obj, val);
+    } else if (rttr::type::get<bool>() == prop.get_type()) {
+        bool val = luaVal.value();
+        prop.set_value(obj, val);
+    } else if (rttr::type::get<std::string>() == prop.get_type()) {
+        std::string val = luaVal.value();
+        prop.set_value(obj, val);
+    } else if (prop.get_type().is_class()) {
+        sol::table subTable = luaVal.value();
+        bool ret = __readSubTable(obj, prop, subTable);
+        if (!ret) {
+            ASSERT_FAIL("Can't read property %s in obj %s", prop.get_name().data(), obj.get_type().get_name().data());
+            return false;
+        }
+    } else {
+        ASSERT_FAIL("UnknownType");
+        return false;
+    }
 
-    ASSERT(1 == lua_isinteger(&L, -1));
-    int ret = lua_tonumber(&L, -1);
-    lua_pop(&L, -2);
-    return ret;
+    return true;
 }
 
-float readLuaFloat(lua_State& L, const char* name)
+static bool __readSubTable(rttr::instance _obj, rttr::property _prop, sol::table _subTable)
 {
-    lua_pushstring(&L, name);
-    lua_gettable(&L, -2);
+    ASSERT_FAIL("SUB TABLES IS NOT WORKING");
+    const auto propList = _prop.get_type().get_properties();
+    for (const auto& prop : propList) {
+        const char* propName = prop.get_name().data();
 
-    ASSERT(1 == lua_isnumber(&L, -1));
-    float ret = lua_tonumber(&L, -1);
-    lua_pop(&L, -2);
-    return ret;
+        sol::optional luaVal = _subTable[propName];
+        ASSERT_MSG(luaVal, "Can't read field %s", propName);
+
+        bool ret = __readProperty(_obj, prop, luaVal);
+        if (!ret) {
+            ASSERT_FAIL("Can't read property %s", propName);
+            return false;
+        }
+    }
+    return true;
 }
 
-bool readLuaBool(lua_State& L, const char* name)
+bool readLuaTable(sol::state& lua, const char* table, rttr::instance obj)
 {
-    lua_pushstring(&L, name);
-    lua_gettable(&L, -2);
-
-    ASSERT(1 == lua_isboolean(&L, -1));
-    bool ret = lua_toboolean(&L, -1);
-    lua_pop(&L, -2);
-    return ret;
-}
-
-std::string readLuaString(lua_State& L, const char* name)
-{
-    lua_pushstring(&L, name);
-    lua_gettable(&L, -2);
-
-    ASSERT(1 == lua_isstring(&L, -1));
-    const char* ret = lua_tostring(&L, -1);
-    lua_pop(&L, -2);
-    return ret;
-}
-
-void readLuaTable(const char* luaFile, const char* luaTable, rttr::instance obj)
-{
-    std::unique_ptr<lua_State, void (*)(lua_State*)> L(luaL_newstate(), lua_close);
-    int r = luaL_dofile(L.get(), luaFile);
-    ASSERT_MSG(LUA_OK == r, "lua can't process file: %s", luaFile);
-
-    lua_getglobal(L.get(), luaTable);
-    ASSERT_MSG(lua_istable(L.get(), -1), "%s isn't table in file: %s", luaTable, luaFile);
+    auto tbl = lua[table];
+    ASSERT_MSG(tbl, "Can't find table %s", table);
 
     const auto propList = obj.get_type().get_properties();
     for (const auto& prop : propList) {
         const char* propName = prop.get_name().data();
 
-        if (rttr::type::get<int>() == prop.get_type()) {
-            int val = readLuaInt(*L.get(), propName);
-            prop.set_value(obj, val);
-        } else if (rttr::type::get<float>() == prop.get_type()) {
-            float val = readLuaFloat(*L.get(), propName);
-            prop.set_value(obj, val);
-        } else if (rttr::type::get<bool>() == prop.get_type()) {
-            bool val = readLuaBool(*L.get(), propName);
-            prop.set_value(obj, val);
-        } else if (rttr::type::get<std::string>() == prop.get_type()) {
-            std::string val = readLuaString(*L.get(), propName);
-            prop.set_value(obj, val);
-        } else {
-            ASSERT_FAIL("UNKNOWN TYPE");
+        sol::optional luaVal = tbl[propName];
+        ASSERT_MSG(luaVal, "Can't read field %s in table %s", propName, table);
+
+        bool ret = __readProperty(obj, prop, luaVal);
+        if (!ret) {
+            ASSERT_FAIL("Can't read property %s in table %s", propName, table);
+            return false;
         }
     }
+    return true;
 }

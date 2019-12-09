@@ -3,8 +3,8 @@
 #include "refl/refl_lua.h"
 
 #include <SDL2/SDL.h>
-#include <lua/lua.hpp>
 #include <rttr/registration>
+#include <sol/sol.hpp>
 #include <sstream>
 
 RTTR_REGISTRATION
@@ -43,7 +43,11 @@ std::string GameConfig::toString() const
 
 bool GameConfig::initByLua()
 {
-    readLuaTable(luaConfigFile, "window", window);
-    readLuaTable(luaConfigFile, "dbgGrid", dbgDrawGrid);
+    sol::state lua;
+    lua.script_file(luaConfigFile);
+
+    readLuaTable(lua, "window", window);
+    readLuaTable(lua, "dbgGrid", dbgDrawGrid);
+
     return true;
 }

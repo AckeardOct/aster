@@ -1,6 +1,6 @@
 #pragma once
 
 #include <rttr/registration>
+#include <sol/forward.hpp>
 
-void readLuaTable(const char* luaFile, const char* luaTable, rttr::instance obj);
-
+bool readLuaTable(sol::state& lua, const char* table, rttr::instance obj);
