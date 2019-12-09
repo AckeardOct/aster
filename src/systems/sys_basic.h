@@ -9,6 +9,8 @@ class b2World;
 
 class IBasicSys {
 public:
+    virtual ~IBasicSys() = default;
+
     virtual void update(entt::registry& reg, float dt) = 0;
     bool isEnabled() { return !isPaused; }
     void enable() { isPaused = false; }

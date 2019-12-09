@@ -2,7 +2,6 @@
 #include "common/logger.h"
 #include "refl/refl_lua.h"
 
-#include <SDL2/SDL.h>
 #include <rttr/registration>
 #include <sol/sol.hpp>
 #include <sstream>

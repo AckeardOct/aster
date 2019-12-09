@@ -5,8 +5,6 @@
 #include "systems/sys_basic.h"
 #include "systems/sys_render.h"
 
-#include <SDL2/SDL_render.h>
-
 AsteroidsScene::AsteroidsScene(GameWindow& window)
     : IScene(window)
     , physWorld(b2Vec2(0.f, 1.f))
@@ -104,7 +102,7 @@ void AsteroidsScene::initEntities()
     { // platform
         auto entity = reg.create();
         Vec2f size(wcenter.x() / 2, 10);
-        Vec2f pos(wcenter.x(), wsize.y() * 0.75);
+        Vec2f pos(wcenter.x(), wsize.y() * 0.75f);
         reg.assign<PositionCmp>(entity, pos, size);
 
         Color color(0x00, 0x00, 0xff, 0x00);

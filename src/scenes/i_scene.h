@@ -11,7 +11,7 @@ public:
         : window(window)
     {
     }
-    virtual ~IScene() {}
+    virtual ~IScene() = default;
 
 public: // abstract interface
     virtual void input(float dt, const SDL_Event& event) = 0;

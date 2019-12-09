@@ -46,11 +46,10 @@ void InputSys::update(entt::registry& reg, float dt)
         }
     }
 
-    auto physView = reg.view<PositionCmp, MoveCmp, PhysDynamicBodyCmp, InputableCmp>();
+    auto physView = reg.view<MoveCmp, PhysDynamicBodyCmp, InputableCmp>();
     for (auto et : physView) {
         if (!direction.isZero()) {
             direction.normalize();
-            PositionCmp& posCmp = physView.get<PositionCmp>(et);
             MoveCmp& moveCmp = physView.get<MoveCmp>(et);
             PhysDynamicBodyCmp& bodyCmp = physView.get<PhysDynamicBodyCmp>(et);
 
@@ -75,7 +74,7 @@ void PhysSys::update(entt::registry& reg, float dt)
         PhysDynamicBodyCmp& physBodyCmp = physView.get<PhysDynamicBodyCmp>(et);
 
         b2Vec2 position = physBodyCmp.body->GetPosition();
-        float32 angle = physBodyCmp.body->GetAngle();
+        // TODO: maybe check angles in Box2D ???
 
         posCmp.pos.x() = position.x;
         posCmp.pos.y() = position.y;
