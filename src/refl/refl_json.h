@@ -1,7 +1,7 @@
 #pragma once
 
-#include <rttr/registration>
 #include <nlohmann/json.hpp>
+#include <rttr/type>
 
 using Json = nlohmann::json;
 

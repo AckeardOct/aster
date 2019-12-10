@@ -37,6 +37,21 @@ RTTR_REGISTRATION
         .property("complex", &t_ReflB::complex);
 }
 
+TEST(ReflJson, toJsonPrimitive)
+{
+    t_Refl data;
+    data.one = 1488;
+    data.two = 13.49;
+    data.three = true;
+    data.four = "Hello World";
+
+    Json js = toJson(data);
+    EXPECT_EQ(1488, js["one"]);
+    EXPECT_FLOAT_EQ(13.49, js["two"]);
+    EXPECT_EQ(true, js["three"]);
+    EXPECT_EQ("Hello World", js["four"]);
+}
+
 TEST(ReflLua, readLuaTable)
 {
     t_Refl data;

@@ -1,5 +1,6 @@
 #include "game_config.h"
 #include "common/logger.h"
+#include "refl/refl_json.h"
 #include "refl/refl_lua.h"
 
 #include <rttr/registration>
@@ -26,18 +27,9 @@ RTTR_REGISTRATION
 GameConfig::GameConfig(int argc, char** argv)
 {
     initByLua();
-    LogMsg("Config: %s", toString().c_str());
-}
-
-std::string GameConfig::toString() const
-{
-    std::stringstream ret;
-    ret << "luaConfigFile: '" << luaConfigFile << "'";
-    ret << ", width: " << window.width;
-    ret << ", height: " << window.height;
-    ret << ", fps: " << window.fps;
-    ret << ", titls: '" << window.title << "'";
-    return ret.str();
+    LogMsg("LuaInited by file: %s", luaConfigFile);
+    LogMsg("cfg window = %s", toJson(window).dump(4).c_str());
+    LogMsg("cfg debugGrid = %s", toJson(dbgDrawGrid).dump(4).c_str());
 }
 
 bool GameConfig::initByLua()

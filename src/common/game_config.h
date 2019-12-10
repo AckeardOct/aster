@@ -21,8 +21,6 @@ class GameConfig {
 public:
     GameConfig(int argc, char** argv);
 
-    std::string toString() const;
-
 public:
     WindowCfg window;
     DbgGridCfg dbgDrawGrid;
