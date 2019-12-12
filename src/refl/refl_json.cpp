@@ -2,10 +2,12 @@
 
 #include "common/logger.h"
 
-static void __to_json_recursively(const rttr::instance& obj2, Json& js);
-static bool __write_variant(const rttr::variant& var, Json& js);
+namespace toJsonImpl {
 
-static bool __write_atomic_types_to_json(const rttr::type& t, const rttr::variant& var, Json& js)
+static void toJsonRecursively(const rttr::instance& obj2, Json& js);
+static bool writeVariant(const rttr::variant& var, Json& js);
+
+static bool writeAtomicTypesToJson(const rttr::type& t, const rttr::variant& var, Json& js)
 {
     if (t.is_arithmetic()) {
         if (t == rttr::type::get<bool>())
@@ -57,45 +59,45 @@ static bool __write_atomic_types_to_json(const rttr::type& t, const rttr::varian
     return false;
 }
 
-static void __write_array(const rttr::variant_sequential_view& view, Json& js)
+static void writeArray(const rttr::variant_sequential_view& view, Json& js)
 {
     for (const auto& item : view) {
         if (item.is_sequential_container()) {
             Json jsVar;
-            __write_array(item.create_sequential_view(), jsVar);
+            writeArray(item.create_sequential_view(), jsVar);
             js += jsVar;
         } else {
             rttr::variant wrapped_var = item.extract_wrapped_value();
             rttr::type value_type = wrapped_var.get_type();
             if (value_type.is_arithmetic() || value_type == rttr::type::get<std::string>() || value_type.is_enumeration()) {
                 Json jsVar;
-                __write_atomic_types_to_json(value_type, wrapped_var, jsVar);
+                writeAtomicTypesToJson(value_type, wrapped_var, jsVar);
                 js += jsVar;
             } else // object
             {
                 Json jsVar;
-                __to_json_recursively(wrapped_var, jsVar);
+                toJsonRecursively(wrapped_var, jsVar);
                 js += jsVar;
             }
         }
     }
 }
 
-static void __write_associative_container(const rttr::variant_associative_view& view, Json& js)
+static void writeAssociativeContainer(const rttr::variant_associative_view& view, Json& js)
 {
     if (view.is_key_only_type()) {
         for (auto& item : view) {
             Json jsVar; // TODO: unused ????
-            __write_variant(item.first, jsVar);
+            writeVariant(item.first, jsVar);
             js += jsVar;
         }
     } else {
         for (auto& item : view) {
             Json jsKey;
-            __write_variant(item.first, jsKey);
+            writeVariant(item.first, jsKey);
 
             Json jsVar;
-            __write_variant(item.second, jsVar);
+            writeVariant(item.second, jsVar);
 
             std::string key;
             jsKey.get_to(key);
@@ -104,22 +106,22 @@ static void __write_associative_container(const rttr::variant_associative_view& 
     }
 }
 
-static bool __write_variant(const rttr::variant& var, Json& js)
+static bool writeVariant(const rttr::variant& var, Json& js)
 {
     auto value_type = var.get_type();
     auto wrapped_type = value_type.is_wrapper() ? value_type.get_wrapped_type() : value_type;
     bool is_wrapper = (wrapped_type != value_type);
 
-    if (__write_atomic_types_to_json(is_wrapper ? wrapped_type : value_type,
+    if (writeAtomicTypesToJson(is_wrapper ? wrapped_type : value_type,
             is_wrapper ? var.extract_wrapped_value() : var, js)) {
     } else if (var.is_sequential_container()) {
-        __write_array(var.create_sequential_view(), js);
+        writeArray(var.create_sequential_view(), js);
     } else if (var.is_associative_container()) {
-        __write_associative_container(var.create_associative_view(), js);
+        writeAssociativeContainer(var.create_associative_view(), js);
     } else {
         auto child_props = is_wrapper ? wrapped_type.get_properties() : value_type.get_properties();
         if (!child_props.empty()) {
-            __to_json_recursively(var, js);
+            toJsonRecursively(var, js);
         } else {
             bool ok = false;
             auto text = var.to_string(&ok);
@@ -134,7 +136,7 @@ static bool __write_variant(const rttr::variant& var, Json& js)
     return true;
 }
 
-static void __to_json_recursively(const rttr::instance& obj2, Json& js)
+static void toJsonRecursively(const rttr::instance& obj2, Json& js)
 {
     rttr::instance obj = obj2.get_type().get_raw_type().is_wrapper() ? obj2.get_wrapped_instance() : obj2;
 
@@ -145,18 +147,19 @@ static void __to_json_recursively(const rttr::instance& obj2, Json& js)
             continue; // cannot serialize, because we cannot retrieve the value
 
         const char* name = prop.get_name().data();
-        if (!__write_variant(prop_value, js[name])) {
+        if (!writeVariant(prop_value, js[name])) {
             ASSERT_FAIL("cannot serialize property: %s", name);
         }
     }
 }
 
+} // namespace toJsonImpl
+
 Json toJson(rttr::instance obj)
 {
-    if (!obj.is_valid())
-        return nullptr;
+    ASSERT_MSG(obj.is_valid(), "Obj must be registered in RttR system");
 
     Json js;
-    __to_json_recursively(obj, js);
+    toJsonImpl::toJsonRecursively(obj, js);
     return js;
 }
