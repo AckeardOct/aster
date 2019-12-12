@@ -10,33 +10,34 @@ static bool writeVariant(const rttr::variant& var, Json& js);
 static bool writeAtomicTypesToJson(const rttr::type& t, const rttr::variant& var, Json& js)
 {
     if (t.is_arithmetic()) {
-        if (t == rttr::type::get<bool>())
+        if (t == rttr::type::get<bool>()) {
             js = var.to_bool();
-        else if (t == rttr::type::get<char>())
-            js = var.to_string(); // BUG ?????
-        else if (t == rttr::type::get<int8_t>())
-            js = var.to_int8();
-        else if (t == rttr::type::get<int16_t>())
-            js = var.to_int16();
-        else if (t == rttr::type::get<int32_t>())
-            js = var.to_int32();
-        else if (t == rttr::type::get<int64_t>())
-            js = var.to_int64();
-        else if (t == rttr::type::get<uint8_t>())
+        } else if (t == rttr::type::get<char>()) {
             js = var.to_uint8();
-        else if (t == rttr::type::get<uint16_t>())
+        } else if (t == rttr::type::get<int8_t>()) {
+            js = var.to_int8();
+        } else if (t == rttr::type::get<int16_t>()) {
+            js = var.to_int16();
+        } else if (t == rttr::type::get<int32_t>()) {
+            js = var.to_int32();
+        } else if (t == rttr::type::get<int64_t>()) {
+            js = var.to_int64();
+        } else if (t == rttr::type::get<uint8_t>()) {
+            js = var.to_uint8();
+        } else if (t == rttr::type::get<uint16_t>()) {
             js = var.to_uint16();
-        else if (t == rttr::type::get<uint32_t>())
+        } else if (t == rttr::type::get<uint32_t>()) {
             js = var.to_uint32();
-        else if (t == rttr::type::get<uint64_t>())
+        } else if (t == rttr::type::get<uint64_t>()) {
             js = var.to_uint64();
-        else if (t == rttr::type::get<float>())
+        } else if (t == rttr::type::get<float>()) {
             js = var.to_float();
-        else if (t == rttr::type::get<double>())
+        } else if (t == rttr::type::get<double>()) {
             js = var.to_double();
-
+        }
         return true;
     } else if (t.is_enumeration()) {
+        ASSERT_FAIL("NEED CHECK");
         bool ok = false;
         auto result = var.to_string(&ok);
         if (ok) {
@@ -55,7 +56,6 @@ static bool writeAtomicTypesToJson(const rttr::type& t, const rttr::variant& var
         js = var.to_string();
         return true;
     }
-
     return false;
 }
 
@@ -162,4 +162,98 @@ Json toJson(rttr::instance obj)
     Json js;
     toJsonImpl::toJsonRecursively(obj, js);
     return js;
+}
+
+namespace fromJsonImpl {
+
+static bool readPrimitive(const Json& jsVal, rttr::instance& obj, rttr::property& prop)
+{
+    rttr::type propType = prop.get_type();
+    if (propType.is_arithmetic()) {
+        if (propType == rttr::type::get<bool>()) {
+            bool val = jsVal.get_to(val);
+            prop.set_value(obj, val);
+        } else if (propType == rttr::type::get<char>()) {
+            char val = jsVal.get_to(val);
+            prop.set_value(obj, val);
+        } else if (propType == rttr::type::get<int8_t>()) {
+            int8_t val = jsVal.get_to(val);
+            prop.set_value(obj, val);
+        } else if (propType == rttr::type::get<int16_t>()) {
+            int16_t val = jsVal.get_to(val);
+            prop.set_value(obj, val);
+        } else if (propType == rttr::type::get<int32_t>()) {
+            int32_t val = jsVal.get_to(val);
+            prop.set_value(obj, val);
+        } else if (propType == rttr::type::get<int64_t>()) {
+            int64_t val = jsVal.get_to(val);
+            prop.set_value(obj, val);
+        } else if (propType == rttr::type::get<uint8_t>()) {
+            uint8_t val = jsVal.get_to(val);
+            prop.set_value(obj, val);
+        } else if (propType == rttr::type::get<uint16_t>()) {
+            uint16_t val = jsVal.get_to(val);
+            prop.set_value(obj, val);
+        } else if (propType == rttr::type::get<uint32_t>()) {
+            uint32_t val = jsVal.get_to(val);
+            prop.set_value(obj, val);
+        } else if (propType == rttr::type::get<uint64_t>()) {
+            uint64_t val = jsVal.get_to(val);
+            prop.set_value(obj, val);
+        } else if (propType == rttr::type::get<float>()) {
+            float val = jsVal.get_to(val);
+            prop.set_value(obj, val);
+        } else if (propType == rttr::type::get<double>()) {
+            double val = jsVal.get_to(val);
+            prop.set_value(obj, val);
+        }
+        return true;
+    } else if (propType.is_enumeration()) {
+        ASSERT_FAIL("NEED CHECK");
+    } else if (propType == rttr::type::get<std::string>()) {
+        std::string val = jsVal.get_to(val);
+        prop.set_value(obj, val);
+        return true;
+    }
+    return false;
+}
+
+static bool readArray(const Json& js, rttr::instance& obj, rttr::property& prop)
+{
+    const auto propList = prop.get_type().get_properties();
+
+    return true;
+}
+
+static bool fromJsonRecur(const Json& js, rttr::instance obj2)
+{
+    rttr::instance obj = obj2.get_type().get_raw_type().is_wrapper() ? obj2.get_wrapped_instance() : obj2;
+    const auto propList = obj.get_derived_type().get_properties();
+
+    for (auto prop : propList) {
+        const char* propName = prop.get_name().data();
+        const rttr::type propType = prop.get_type();
+
+        Json jsVal = js[propName];
+        if (propType.is_array()) {
+            ASSERT(jsVal.is_array());
+            readArray(jsVal, obj, prop);
+        } else if (propType.is_class()) {
+            ASSERT(jsVal.is_object());
+            // object
+        } else {
+            ASSERT(jsVal.is_primitive());
+            readPrimitive(jsVal, obj, prop);
+        }
+    }
+    return true;
+}
+
+} // namespace fromJsonImpl
+
+bool fromJson(const Json& js, rttr::instance obj)
+{
+    ASSERT_MSG(!js.is_null(), "Json is null");
+    fromJsonImpl::fromJsonRecur(js, obj);
+    return true;
 }

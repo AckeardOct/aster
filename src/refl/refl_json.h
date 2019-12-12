@@ -6,3 +6,4 @@
 using Json = nlohmann::json;
 
 Json toJson(rttr::instance obj);
+bool fromJson(const Json& js, rttr::instance obj);

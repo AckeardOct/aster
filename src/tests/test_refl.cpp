@@ -83,6 +83,18 @@ TEST(ReflJson, toJsonPrimitive)
     EXPECT_EQ("Hello World", js["four"]);
 }
 
+TEST(ReflJson, fromJsonPrimitive)
+{
+    Json js = Json::parse(R"({
+                            "two" : 1488
+                          })");
+
+    t_ReflA data;
+    bool success = fromJson(js, data);
+    EXPECT_TRUE(success);
+    EXPECT_EQ(1488, data.two);
+}
+
 TEST(ReflJson, toJsonVector)
 {
     t_ReflC data;
