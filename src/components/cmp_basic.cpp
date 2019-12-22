@@ -25,6 +25,8 @@ PhysDynamicBodyCmp::PhysDynamicBodyCmp(b2World& physWorld, Vec2f pos, Vec2f size
     bodyDef.position.Set(pos.x(), pos.y());
     this->body = physWorld.CreateBody(&bodyDef);
 
+    this->body->SetFixedRotation(true);
+
     b2PolygonShape dynamicBox;
     size /= 2.f;
     dynamicBox.SetAsBox(size.x(), size.y());
