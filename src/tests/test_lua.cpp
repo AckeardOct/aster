@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <lua/lua.hpp>
-#include <rttr/registration>
 
 static const std::string SCRIPTS_TEST_DIR = "./scripts/test/";
 

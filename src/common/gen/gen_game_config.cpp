@@ -3,6 +3,7 @@
 #include "../game_config.h"
 #include "common/logger.h"
 
+#include <nlohmann/json.hpp>
 #include <sol/sol.hpp>
 
 void gen::fromLuaTable(sol::state& lua, StringRef tableName, WindowCfg& data)
@@ -49,6 +50,18 @@ void gen::fromLuaTable(sol::state& lua, StringRef tableName, WindowCfg& data)
         String val = luaVal->get<String>();
         dataVal = val;
     }
+}
+
+Json gen::toJson(WindowCfg& data)
+{
+    Json ret;
+
+    ret["width"] = data.width;
+    ret["height"] = data.height;
+    ret["fps"] = data.fps;
+    ret["title"] = data.title;
+
+    return ret;
 }
 
 void gen::fromLuaTable(sol::state& lua, StringRef tableName, DbgGridCfg& data)
@@ -105,4 +118,17 @@ void gen::fromLuaTable(sol::state& lua, StringRef tableName, DbgGridCfg& data)
         int val = luaVal->get<int>();
         dataVal = val;
     }
+}
+
+Json gen::toJson(DbgGridCfg& data)
+{
+    Json ret;
+
+    ret["enable"] = data.enable;
+    ret["resolutionX"] = data.resolutionX;
+    ret["resolutionY"] = data.resolutionY;
+    ret["offsetX"] = data.offsetX;
+    ret["offsetY"] = data.offsetY;
+
+    return ret;
 }

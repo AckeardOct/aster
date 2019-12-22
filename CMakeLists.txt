@@ -21,11 +21,6 @@ link_directories(${LUA_DIR}/install/lib)
 include_directories(${LUA_DIR}/install/include)
 
 
-set(RTTR_DIR ${CMAKE_SOURCE_DIR}/build/rttr)
-link_directories(${RTTR_DIR}/build/lib)
-include_directories(${RTTR_DIR}/build/include)
-
-
 set(SOL2_DIR ${CMAKE_SOURCE_DIR}/build/sol2)
 include_directories(${SOL2_DIR}/single/single/include)
 
@@ -33,14 +28,13 @@ set(PROJECT_DEPS
     ${CONAN_LIBS}
     gtest
     lua
-    rttr_core)
+)
 
 include_directories(src)
 include(src/common/src.cmake)
 include(src/components/src.cmake)
 include(src/scenes/src.cmake)
 include(src/systems/src.cmake)
-include (src/refl/src.cmake)
 include(src/tests/src.cmake)
 
 set(all-src
@@ -50,7 +44,7 @@ set(all-src
     ${components-src}
     ${scenes-src}
     ${systems-src}
-    ${refl-src})
+)
 
 add_executable(${PROJECT_NAME} ${all-src})
 target_link_libraries(${PROJECT_NAME} ${PROJECT_DEPS})
