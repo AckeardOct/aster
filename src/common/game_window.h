@@ -3,7 +3,6 @@
 #include "common/game_config.h"
 #include "common/math_utils.h"
 
-class GameConfig;
 class IScene;
 class SDL_Renderer;
 class SDL_Window;

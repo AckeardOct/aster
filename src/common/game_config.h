@@ -1,12 +1,13 @@
 #pragma once
 
-#include <string>
+#include "common/string.h"
+#include "gen/gen_game_config.h"
 
 struct WindowCfg {
     int width = 800;
     int height = 600;
     int fps = 30;
-    std::string title = "Aster";
+    String title = "Aster";
 };
 
 struct DbgGridCfg {
@@ -26,8 +27,8 @@ public:
     DbgGridCfg dbgDrawGrid;
 
 private:
-    bool initByLua();
+    void initByLua();
 
 private:
-    const char* luaConfigFile = "config.lua";
+    StringRef luaConfigFile = "config.lua";
 };

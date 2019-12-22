@@ -1,8 +1,7 @@
 #include "refl/refl_json.h"
-#include "refl/refl_lua.h"
 
 #include <gtest/gtest.h>
-#include <sol/sol.hpp>
+#include <rttr/registration>
 
 struct t_Refl {
     int one = 0;
@@ -130,38 +129,4 @@ TEST(ReflJson, toJsonMap)
     EXPECT_EQ(2, js["ass2"]["first"][1]);
     std::vector<int> vec = { 4, 5, 6 };
     EXPECT_EQ(vec, js["ass2"]["second"]);
-}
-
-TEST(ReflLua, readLuaTable)
-{
-    sol::state lua;
-    lua.script(R"( data = {
-                    one = 1349,
-                    two = 14.88,
-                    three = true,
-                    four = "Hello World"
-                   }
-               )");
-    t_Refl data;
-    readLuaTable(lua, "data", data);
-    EXPECT_EQ(1349, data.one);
-    EXPECT_FLOAT_EQ(14.88f, data.two);
-    EXPECT_EQ(true, data.three);
-    EXPECT_EQ("Hello World", data.four);
-}
-
-TEST(ReflLua, readLuaTableRecur)
-{
-    t_ReflB data;
-    sol::state lua;
-    lua.script(R"( data = {
-                    one = 13.49,
-                    complex = {
-                        two = 1488
-                        }
-                   }
-               )");
-    //readLuaTable(lua, "data", data);
-    //EXPECT_FLOAT_EQ(13.49, data.one);
-    //EXPECT_EQ(1488, data.complex.two);
 }

@@ -1,11 +1,9 @@
 #include "game_config.h"
 #include "common/logger.h"
 #include "refl/refl_json.h"
-#include "refl/refl_lua.h"
 
 #include <rttr/registration>
 #include <sol/sol.hpp>
-#include <sstream>
 
 RTTR_REGISTRATION
 {
@@ -27,18 +25,16 @@ RTTR_REGISTRATION
 GameConfig::GameConfig(int argc, char** argv)
 {
     initByLua();
-    LogMsg("LuaInited by file: %s", luaConfigFile);
+    LogMsg("LuaInited by file: %s", luaConfigFile.data());
     LogMsg("cfg window = %s", toJson(window).dump(4).c_str());
     LogMsg("cfg debugGrid = %s", toJson(dbgDrawGrid).dump(4).c_str());
 }
 
-bool GameConfig::initByLua()
+void GameConfig::initByLua()
 {
     sol::state lua;
-    lua.script_file(luaConfigFile);
+    lua.script_file(luaConfigFile.data());
 
-    readLuaTable(lua, "window", window);
-    readLuaTable(lua, "dbgGrid", dbgDrawGrid);
-
-    return true;
+    gen::fromLuaTable(lua, "window", window);
+    gen::fromLuaTable(lua, "dbgGrid", dbgDrawGrid);
 }
