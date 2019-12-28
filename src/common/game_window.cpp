@@ -146,15 +146,15 @@ void GameWindow::drawGrid()
 
     SDL_SetRenderDrawColor(sdl_renderer, (u_char)color.r, (u_char)color.g, (u_char)color.b, (u_char)color.a);
 
-    int currX = offset.x();
-    while (currX < sz.x()) {
-        SDL_RenderDrawLine(sdl_renderer, currX, 0, currX, sz.y());
-        currX += resolution.x();
+    int currX = offset.x;
+    while (currX < sz.x) {
+        SDL_RenderDrawLine(sdl_renderer, currX, 0, currX, sz.y);
+        currX += resolution.x;
     }
 
-    int currY = offset.y();
-    while (currY < sz.y()) {
-        SDL_RenderDrawLine(sdl_renderer, 0, currY, sz.x(), currY);
-        currY += resolution.y();
+    int currY = offset.y;
+    while (currY < sz.y) {
+        SDL_RenderDrawLine(sdl_renderer, 0, currY, sz.x, currY);
+        currY += resolution.y;
     }
 }

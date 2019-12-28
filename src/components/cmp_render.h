@@ -10,3 +10,8 @@ public:
     Color borderColor;
     Color fillColor;
 };
+
+class PolyRenddCmp {
+public:
+    PolyRenddCmp(Color color);
+};

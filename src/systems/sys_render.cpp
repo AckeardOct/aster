@@ -14,10 +14,10 @@ void RectRendSys::update(entt::registry& reg, SDL_Renderer& sdl_renderer)
         auto& posCmp = view.get<PositionCmp>(ent);
         auto& rectCmp = view.get<RectRendCmp>(ent);
 
-        rect.w = static_cast<int>(posCmp.size.x());
-        rect.h = static_cast<int>(posCmp.size.y());
-        rect.x = static_cast<int>(posCmp.pos.x() - rect.w / 2);
-        rect.y = static_cast<int>(posCmp.pos.y() - rect.h / 2);
+        rect.w = static_cast<int>(posCmp.size.x);
+        rect.h = static_cast<int>(posCmp.size.y);
+        rect.x = static_cast<int>(posCmp.pos.x - rect.w / 2);
+        rect.y = static_cast<int>(posCmp.pos.y - rect.h / 2);
 
         { // fill
             const Color& color = rectCmp.fillColor;
@@ -31,4 +31,8 @@ void RectRendSys::update(entt::registry& reg, SDL_Renderer& sdl_renderer)
             SDL_RenderDrawRect(&sdl_renderer, &rect);
         }
     }
+}
+
+void PolyRendSys::update(entt::registry& reg, SDL_Renderer& sdl_renderer)
+{
 }

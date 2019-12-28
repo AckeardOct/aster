@@ -6,11 +6,15 @@
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 
-PositionCmp::PositionCmp(Vec2f pos, Vec2f size, Vec2f direction)
+PositionCmp::PositionCmp(Vec2f pos, Vec2f size)
     : pos(pos)
     , size(size)
-    , direction(direction)
 {
+    trans.position.x = pos.x;
+    trans.position.y = pos.y;
+
+    trans.sizeScale.x = size.x;
+    trans.sizeScale.y = size.y;
 }
 
 MoveCmp::MoveCmp(Vec2f speed)
@@ -22,14 +26,14 @@ PhysDynamicBodyCmp::PhysDynamicBodyCmp(b2World& physWorld, Vec2f pos, Vec2f size
 {
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(pos.x(), pos.y());
+    bodyDef.position.Set(pos.x, pos.y);
     this->body = physWorld.CreateBody(&bodyDef);
 
     this->body->SetFixedRotation(true);
 
     b2PolygonShape dynamicBox;
     size /= 2.f;
-    dynamicBox.SetAsBox(size.x(), size.y());
+    dynamicBox.SetAsBox(size.x, size.y);
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &dynamicBox;
@@ -43,12 +47,12 @@ PhysStaticBodyCmp::PhysStaticBodyCmp(b2World& physWorld, Vec2f pos, Vec2f size)
 {
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
-    bodyDef.position.Set(pos.x(), pos.y());
+    bodyDef.position.Set(pos.x, pos.y);
     this->body = physWorld.CreateBody(&bodyDef);
 
     b2PolygonShape dynamicBox;
     size /= 2.f;
-    dynamicBox.SetAsBox(size.x(), size.y());
+    dynamicBox.SetAsBox(size.x, size.y);
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &dynamicBox;

@@ -21,3 +21,8 @@ class RectRendSys : public IRenderSys {
 public: // IRenderSys interface
     virtual void update(entt::registry& reg, SDL_Renderer& sdl_renderer) override;
 };
+
+class PolyRendSys : public IRenderSys {
+public: // IRenderSys interface
+    void update(entt::registry& reg, SDL_Renderer& sdl_renderer) override;
+};

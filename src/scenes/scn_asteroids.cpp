@@ -74,7 +74,7 @@ void AsteroidsScene::initEntities()
 
     { // player
         auto entity = reg.create();
-        Vec2f pos(wcenter.x(), wcenter.y());
+        Vec2f pos(wcenter.x, wcenter.y);
         Vec2f size(20.f, 20.f);
         reg.assign<PositionCmp>(entity, pos, size);
 
@@ -90,7 +90,7 @@ void AsteroidsScene::initEntities()
 
     { // cube
         auto entity = reg.create();
-        Vec2f pos(wcenter.x() - 40, wcenter.y());
+        Vec2f pos(wcenter.x - 40, wcenter.y);
         Vec2f size(Vec2f(20, 20));
         reg.assign<PositionCmp>(entity, pos, size);
 
@@ -101,8 +101,8 @@ void AsteroidsScene::initEntities()
 
     { // platform
         auto entity = reg.create();
-        Vec2f size(wcenter.x() / 2, 10);
-        Vec2f pos(wcenter.x(), wsize.y() * 0.75f);
+        Vec2f size(wcenter.x / 2, 10);
+        Vec2f pos(wcenter.x, wsize.y * 0.75f);
         reg.assign<PositionCmp>(entity, pos, size);
 
         Color color(0x00, 0x00, 0xff, 0x00);
@@ -111,29 +111,29 @@ void AsteroidsScene::initEntities()
     }
 
     { // walls
-        Vec2f size(0, wsize.y());
+        Vec2f size(0, wsize.y);
         { // left
             auto entity = reg.create();
-            Vec2f pos(-1, wcenter.y());
+            Vec2f pos(-1, wcenter.y);
             reg.assign<PositionCmp>(entity, pos, size);
             reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
         }
         { // right
             auto entity = reg.create();
-            Vec2f pos(wsize.x() + 1, wcenter.y());
+            Vec2f pos(wsize.x + 1, wcenter.y);
             reg.assign<PositionCmp>(entity, pos, size);
             reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
         }
-        size = Vec2f(wsize.x(), 0);
+        size = Vec2f(wsize.x, 0);
         { // top
             auto entity = reg.create();
-            Vec2f pos(wcenter.x(), -1);
+            Vec2f pos(wcenter.x, -1);
             reg.assign<PositionCmp>(entity, pos, size);
             reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
         }
         { // bottom
             auto entity = reg.create();
-            Vec2f pos(wcenter.x(), wsize.y() + 1);
+            Vec2f pos(wcenter.x, wsize.y + 1);
             reg.assign<PositionCmp>(entity, pos, size);
             reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
         }

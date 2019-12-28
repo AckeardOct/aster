@@ -9,10 +9,11 @@ class b2Body;
 struct PositionCmp {
     Vec2f pos;
     Vec2f size;
-    Vec2f direction;
+
+    Transform trans;
 
 public:
-    PositionCmp(Vec2f pos, Vec2f size, Vec2f direction = Vec2f(0.f, 0.f));
+    PositionCmp(Vec2f pos, Vec2f size);
 };
 
 struct MoveCmp {

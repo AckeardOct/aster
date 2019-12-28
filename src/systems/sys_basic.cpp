@@ -31,16 +31,16 @@ void InputSys::update(entt::registry& reg, float dt)
         if (iter.second) {
             switch (iter.first) {
             case SDLK_UP:
-                direction.y() -= 1.f;
+                direction.y -= 1.f;
                 break;
             case SDLK_DOWN:
-                direction.y() += 1.f;
+                direction.y += 1.f;
                 break;
             case SDLK_LEFT:
-                direction.x() -= 1.f;
+                direction.x -= 1.f;
                 break;
             case SDLK_RIGHT:
-                direction.x() += 1.f;
+                direction.x += 1.f;
                 break;
             }
         }
@@ -48,14 +48,16 @@ void InputSys::update(entt::registry& reg, float dt)
 
     auto physView = reg.view<MoveCmp, PhysDynamicBodyCmp, InputableCmp>();
     for (auto et : physView) {
-        if (!direction.isZero()) {
-            direction.normalize();
-            MoveCmp& moveCmp = physView.get<MoveCmp>(et);
-            PhysDynamicBodyCmp& bodyCmp = physView.get<PhysDynamicBodyCmp>(et);
-
-            b2Vec2 impulse(direction.x() * moveCmp.speed.x(), direction.y() * moveCmp.speed.y());
-            bodyCmp.body->SetLinearVelocity(impulse);
+        if (isZero(direction)) {
+            continue;
         }
+
+        direction = normalize(direction);
+        MoveCmp& moveCmp = physView.get<MoveCmp>(et);
+        PhysDynamicBodyCmp& bodyCmp = physView.get<PhysDynamicBodyCmp>(et);
+
+        b2Vec2 impulse(direction.x * moveCmp.speed.x, direction.y * moveCmp.speed.y);
+        bodyCmp.body->SetLinearVelocity(impulse);
     }
 
     events.clear();
@@ -76,7 +78,7 @@ void PhysSys::update(entt::registry& reg, float dt)
         b2Vec2 position = physBodyCmp.body->GetPosition();
         // TODO: maybe check angles in Box2D ???
 
-        posCmp.pos.x() = position.x;
-        posCmp.pos.y() = position.y;
+        posCmp.pos.x = position.x;
+        posCmp.pos.y = position.y;
     }
 }
