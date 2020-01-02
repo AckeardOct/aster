@@ -46,3 +46,4 @@ add_subdirectory(src/engine)
 
 add_subdirectory(src/aster)
 add_subdirectory(src/tests)
+add_subdirectory(src/playground/ogles)
