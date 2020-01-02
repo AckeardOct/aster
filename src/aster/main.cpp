@@ -1,15 +1,8 @@
 #include "common/game_window.h"
 
-#include <gtest/gtest.h>
 
 int main(int argc, char** argv)
 {
-    ::testing::InitGoogleTest(&argc, argv);
-    int ret = RUN_ALL_TESTS();
-    if (ret) {
-        return ret;
-    }
-
     GameWindow window(argc, argv);
     window.runLoop();
 

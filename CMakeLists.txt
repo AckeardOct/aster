@@ -1,19 +1,15 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(aster LANGUAGES CXX)
+project(Aster-Solution)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
+
 set(CONAN_DIR ${CMAKE_SOURCE_DIR}/build/conan)
 include(${CONAN_DIR}/conanbuildinfo.cmake)
 conan_basic_setup()
-
-
-set(GTEST_DIR ${CMAKE_SOURCE_DIR}/build/gtest)
-link_directories(${GTEST_DIR}/build/lib)
-include_directories(${GTEST_DIR}/googletest/include)
 
 
 set(LUA_DIR ${CMAKE_SOURCE_DIR}/build/lua-5.3.5)
@@ -24,27 +20,29 @@ include_directories(${LUA_DIR}/install/include)
 set(SOL2_DIR ${CMAKE_SOURCE_DIR}/build/sol2)
 include_directories(${SOL2_DIR}/single/single/include)
 
-set(PROJECT_DEPS
+
+set(GL_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/src)
+SET_PROPERTY(GLOBAL PROPERTY GL_SRC_DIR ${GL_SRC_DIR})
+
+
+set(GL_ENGINE_3RD
     ${CONAN_LIBS}
-    gtest
     lua
 )
+SET_PROPERTY(GLOBAL PROPERTY GL_ENGINE_3RD ${GL_ENGINE_3RD})
 
-include_directories(src)
-include(src/common/src.cmake)
-include(src/components/src.cmake)
-include(src/scenes/src.cmake)
-include(src/systems/src.cmake)
-include(src/tests/src.cmake)
 
-set(all-src
-    src/main.cpp
-    ${test-src}
-    ${common-src}
-    ${components-src}
-    ${scenes-src}
-    ${systems-src}
+set(GL_ALL_ENGINE
+    engine::common
+    engine::components
+    engine::scenes
+    engine::systems
 )
+SET_PROPERTY(GLOBAL PROPERTY GL_ALL_ENGINE ${GL_ALL_ENGINE})
 
-add_executable(${PROJECT_NAME} ${all-src})
-target_link_libraries(${PROJECT_NAME} ${PROJECT_DEPS})
+
+include_directories(src/engine)
+add_subdirectory(src/engine)
+
+add_subdirectory(src/aster)
+add_subdirectory(src/tests)
