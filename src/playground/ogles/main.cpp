@@ -145,6 +145,8 @@ bool initShaders()
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
 
     GLint linkStatus = 0;
     glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linkStatus);
@@ -163,25 +165,50 @@ bool initShaders()
     return true;
 }
 
+GLuint VAO = GL_NONE;
+GLuint VBO = GL_NONE;
+
+void initRenderObjects()
+{
+    GLfloat vertices[] = {
+        0.0f, 0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f
+    };
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+
+    glBindVertexArray(VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(GL_NONE);
+
+    // clear
+    glBindBuffer(GL_ARRAY_BUFFER, GL_NONE);
+    glBindVertexArray(GL_NONE);
+}
+
+void destroyRenderObjects()
+{
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(1, &VAO);
+}
+
 void render()
 {
+    glViewport(0, 0, winWidth, winHeight);
     glClearColor(0.0, 1.0, 0.0, 1.0);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    { // custom render
-        GLfloat vVertices[] = { 0.0f, 0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f };
-
-        glViewport(0, 0, winWidth, winHeight);
-        glClear(GL_COLOR_BUFFER_BIT);
+    { // tringle
         glUseProgram(shaderProgram);
-
-        // Load the vertex data
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, vVertices);
-        glEnableVertexAttribArray(0);
-
+        glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
+
+        glBindVertexArray(GL_NONE);
     }
 
     SDL_GL_SwapWindow(sdl_window);
@@ -192,6 +219,7 @@ int main(int argc, char** argv)
     initSDL();
     initOpenGlEs();
     initShaders();
+    initRenderObjects();
 
     bool quitRequested = false;
     while (!quitRequested) {
@@ -207,6 +235,7 @@ int main(int argc, char** argv)
         }
     }
 
+    destroyRenderObjects();
     destroySDL();
     LogMsg("GoodBye!");
     return 0;
