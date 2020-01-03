@@ -115,12 +115,12 @@ bool initShaders()
 {
     GLuint vertexShader;
     {
-        StringRef vertexSrc = "#version 300 es                          \n"
-                              "layout(location = 0) in vec4 vPosition;  \n"
-                              "void main()                              \n"
-                              "{                                        \n"
-                              "   gl_Position = vPosition;              \n"
-                              "}                                        \n";
+        StringRef vertexSrc = "#version 300 es                            \n"
+                              "layout(location = 0) in vec4 vPosition;    \n"
+                              "void main()                                \n"
+                              "{                                          \n"
+                              "   gl_Position = vPosition;                \n"
+                              "}                                          \n";
 
         vertexShader = loadShader(ShaderType::Vertex, vertexSrc.data());
     }
@@ -129,10 +129,11 @@ bool initShaders()
     {
         StringRef fragmentSrc = "#version 300 es                              \n"
                                 "precision mediump float;                     \n"
-                                "out vec4 fragColor;                          \n"
+                                "out vec4 outColor;                           \n"
+                                "uniform vec4 ourColor;                       \n"
                                 "void main()                                  \n"
                                 "{                                            \n"
-                                "   fragColor = vec4 ( 1.0, 0.0, 0.0, 1.0 );  \n"
+                                "   outColor = ourColor;                      \n"
                                 "}                                            \n";
         fragmentShader = loadShader(ShaderType::Fragment, fragmentSrc.data());
     }
@@ -215,9 +216,11 @@ void render()
     glClear(GL_COLOR_BUFFER_BIT);
 
     { // tringle
+        static GLint vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
         glUseProgram(shaderProgram);
+        glUniform4f(vertexColorLocation, 0.0, 0.0, 1.0, 1.0); // blue
+
         glBindVertexArray(VAO);
-        //glDrawArrays(GL_TRIANGLES, 0, 3);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 
         glBindVertexArray(GL_NONE);
