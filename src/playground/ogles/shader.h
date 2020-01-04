@@ -14,7 +14,7 @@ public:
     void setVec4f(StringRef param, const Vec4f& vec);
 
 private:
-    int getUniformLocation(StringRef param) const;
+    int getUniformLocation(StringRef param) const; // TODO: CACHE
 
 private:
     uint shaderProgram = 0;

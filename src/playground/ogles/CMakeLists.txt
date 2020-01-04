@@ -12,6 +12,7 @@ set(src
     shader.cpp
 )
 
+add_subdirectory(stb-image)
 
 add_executable(${PROJECT_NAME} ${src})
-target_link_libraries(${PROJECT_NAME} ${GL_ENGINE_3RD} engine::common)
+target_link_libraries(${PROJECT_NAME} ${GL_ENGINE_3RD} GL engine::common stb-image)
