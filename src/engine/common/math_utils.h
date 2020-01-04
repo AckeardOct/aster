@@ -3,20 +3,15 @@
 #include <glm/gtc/quaternion.hpp>
 #include <glm/mat4x4.hpp>
 #include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
+#include <glm/vec4.hpp>
 
 using Vec2f = glm::vec2;
 using Vec3f = glm::vec3;
+using Vec4f = glm::vec4;
 using Mat4f = glm::mat4;
 using Quat = glm::quat;
-
-struct Color {
-    uint8_t r = 0x0;
-    uint8_t g = 0x0;
-    uint8_t b = 0x0;
-    uint8_t a = 0x0;
-
-    Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a);
-};
+using Color = Vec4f;
 
 // Преобразует координаты из локальных в мировые в следующем порядке:
 //  - сначала вершины масштабируются

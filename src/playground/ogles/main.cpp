@@ -1,6 +1,8 @@
 #include <GLES3/gl3.h>
 #include <SDL2/SDL.h>
 
+#include "shader.h"
+
 #include "common/file_system.h"
 #include "common/logger.h"
 #include "common/math_utils.h"
@@ -14,7 +16,7 @@ SDL_Window* sdl_window = nullptr;
 SDL_Renderer* sdl_renderer = nullptr;
 
 SDL_GLContext gl_context = nullptr;
-GLuint shaderProgram = 0;
+Shader shader(SHADERS_DIR + "/simple.vsh", SHADERS_DIR + "/simple.fsh");
 
 void initSDL()
 {
@@ -65,7 +67,6 @@ void initOpenGlEs()
 
 void destroySDL()
 {
-    glDeleteProgram(shaderProgram);
     SDL_GL_DeleteContext(gl_context);
 
     SDL_DestroyRenderer(sdl_renderer);
@@ -77,86 +78,14 @@ void destroySDL()
     SDL_Quit();
 }
 
-enum class ShaderType {
-    Vertex = GL_VERTEX_SHADER,
-    Fragment = GL_FRAGMENT_SHADER
-};
-
-GLuint loadShader(ShaderType type, const char* source)
-{
-    ASSERT(ShaderType::Vertex == type || ShaderType::Fragment == type);
-
-    GLuint retShader = 0;
-    retShader = glCreateShader(static_cast<GLenum>(type));
-    if (0 == retShader) {
-        ASSERT_FAIL("Can't create shader");
-        return 0;
-    }
-
-    glShaderSource(retShader, 1, &source, NULL);
-    glCompileShader(retShader);
-
-    GLint compiledStatus = 0;
-    glGetShaderiv(retShader, GL_COMPILE_STATUS, &compiledStatus);
-
-    if (0 == compiledStatus) {
-        GLint infoLen = 0;
-        glGetShaderiv(retShader, GL_INFO_LOG_LENGTH, &infoLen);
-        ASSERT(infoLen > 0);
-        String info;
-        info.resize(static_cast<size_t>(infoLen));
-        glGetShaderInfoLog(retShader, infoLen, NULL, info.data());
-        ASSERT_FAIL("Can't compile shader. error: %s", info.c_str());
-        glDeleteShader(retShader);
-        return 0;
-    }
-    return retShader;
-}
-
-bool initShaders()
-{
-    GLuint vertexShader = 0;
-    String vertexSrc = fs::cat(SHADERS_DIR + "/simple.vsh");
-    vertexShader = loadShader(ShaderType::Vertex, vertexSrc.data());
-
-    GLuint fragmentShader = 0;
-    String fragmentSrc = fs::cat(SHADERS_DIR + "/simple.fsh");
-    fragmentShader = loadShader(ShaderType::Fragment, fragmentSrc.data());
-
-    shaderProgram = glCreateProgram();
-    if (0 == shaderProgram) {
-        ASSERT_FAIL("Can't create shader program");
-        return false;
-    }
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-
-    GLint linkStatus = 0;
-    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &linkStatus);
-    if (0 == linkStatus) {
-        GLint infoLen = 0;
-        glGetProgramiv(shaderProgram, GL_INFO_LOG_LENGTH, &infoLen);
-        ASSERT(infoLen > 0);
-        String info;
-        info.resize(static_cast<size_t>(infoLen));
-        glGetProgramInfoLog(shaderProgram, infoLen, NULL, info.data());
-        ASSERT_FAIL("Can't link shader program. error: %s", info.c_str());
-        glDeleteProgram(shaderProgram);
-        return false;
-    }
-
-    return true;
-}
-
 GLuint VAO = 0;
 GLuint VBO = 0;
 GLuint EBO = 0;
 
 void initRenderObjects()
 {
+    shader.compile();
+
     GLfloat vertices[] = {
         +0.5, +0.5, 0.0,
         +0.5, -0.5, 0.0,
@@ -201,9 +130,9 @@ void render()
     glClear(GL_COLOR_BUFFER_BIT);
 
     { // tringle
-        static GLint vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-        glUseProgram(shaderProgram);
-        glUniform4f(vertexColorLocation, 0.0, 0.0, 1.0, 1.0); // blue
+        glUseProgram(shader.handle());
+        Vec4f blue(0.0, 0.0, 1.0, 1.0);
+        shader.setVec4f("ourColor", blue); // blue
 
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -218,7 +147,6 @@ int main(int argc, char** argv)
 {
     initSDL();
     initOpenGlEs();
-    initShaders();
     initRenderObjects();
 
     bool quitRequested = false;

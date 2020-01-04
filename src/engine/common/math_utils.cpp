@@ -6,14 +6,6 @@
 
 constexpr float MIN_DIFF_FLOAT = 0.00001;
 
-Color::Color(uint8_t r, uint8_t g, uint8_t b, uint8_t a)
-    : r(r)
-    , g(g)
-    , b(b)
-    , a(a)
-{
-}
-
 bool isZero(const Vec2f& vec)
 {
     if (std::abs(vec.x) > MIN_DIFF_FLOAT) {
