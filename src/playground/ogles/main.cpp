@@ -1,10 +1,12 @@
 #include <GLES3/gl3.h>
 #include <SDL2/SDL.h>
 
-#include <common/logger.h>
-#include <common/math_utils.h>
-#include <common/string.h>
+#include "common/file_system.h"
+#include "common/logger.h"
+#include "common/math_utils.h"
+#include "common/string.h"
 
+const String SHADERS_DIR = "./shaders/";
 const int winWidth = 640;
 const int winHeight = 480;
 
@@ -113,30 +115,13 @@ GLuint loadShader(ShaderType type, const char* source)
 
 bool initShaders()
 {
-    GLuint vertexShader;
-    {
-        StringRef vertexSrc = "#version 300 es                            \n"
-                              "layout(location = 0) in vec4 vPosition;    \n"
-                              "void main()                                \n"
-                              "{                                          \n"
-                              "   gl_Position = vPosition;                \n"
-                              "}                                          \n";
+    GLuint vertexShader = 0;
+    String vertexSrc = fs::cat(SHADERS_DIR + "/simple.vsh");
+    vertexShader = loadShader(ShaderType::Vertex, vertexSrc.data());
 
-        vertexShader = loadShader(ShaderType::Vertex, vertexSrc.data());
-    }
-
-    GLuint fragmentShader;
-    {
-        StringRef fragmentSrc = "#version 300 es                              \n"
-                                "precision mediump float;                     \n"
-                                "out vec4 outColor;                           \n"
-                                "uniform vec4 ourColor;                       \n"
-                                "void main()                                  \n"
-                                "{                                            \n"
-                                "   outColor = ourColor;                      \n"
-                                "}                                            \n";
-        fragmentShader = loadShader(ShaderType::Fragment, fragmentSrc.data());
-    }
+    GLuint fragmentShader = 0;
+    String fragmentSrc = fs::cat(SHADERS_DIR + "/simple.fsh");
+    fragmentShader = loadShader(ShaderType::Fragment, fragmentSrc.data());
 
     shaderProgram = glCreateProgram();
     if (0 == shaderProgram) {
