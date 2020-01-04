@@ -21,7 +21,7 @@ set(src
 
 
 add_executable(${PROJECT_NAME} ${src})
-target_link_libraries(${PROJECT_NAME} gtest ${GL_ENGINE_3RD} engine::common)
+target_link_libraries(${PROJECT_NAME} ${GL_ENGINE_3RD} gtest engine::common)
 
 
 

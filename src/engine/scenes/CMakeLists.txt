@@ -12,6 +12,6 @@ set(src
 )
 
 
-add_library(${PROJECT_NAME} ${src})
+add_library(${PROJECT_NAME} STATIC ${src})
 add_library(engine::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_link_libraries(${PROJECT_NAME} ${GL_ENGINE_3RD} engine::common engine::components engine::systems)

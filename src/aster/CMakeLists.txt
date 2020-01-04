@@ -8,4 +8,4 @@ GET_PROPERTY(GL_SRC_DIR GLOBAL PROPERTY GL_SRC_DIR)
 
 
 add_executable(${PROJECT_NAME} ${GL_SRC_DIR}/aster/main.cpp)
-target_link_libraries(${PROJECT_NAME} ${GL_ALL_ENGINE})
+target_link_libraries(${PROJECT_NAME} ${GL_ALL_ENGINE} engine::common)
