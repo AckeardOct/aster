@@ -13,4 +13,4 @@ set(src
 
 
 add_executable(${PROJECT_NAME} ${src})
-target_link_libraries(${PROJECT_NAME} ${GL_ENGINE_3RD})
+target_link_libraries(${PROJECT_NAME} ${GL_ENGINE_3RD} engine::common)

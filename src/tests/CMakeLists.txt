@@ -16,8 +16,34 @@ set(src
     main.cpp
     test_lua.cpp
     test_sol2.cpp
+    test_file_system.cpp
 )
 
 
 add_executable(${PROJECT_NAME} ${src})
-target_link_libraries(${PROJECT_NAME} gtest ${GL_ENGINE_3RD})
+target_link_libraries(${PROJECT_NAME} gtest ${GL_ENGINE_3RD} engine::common)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

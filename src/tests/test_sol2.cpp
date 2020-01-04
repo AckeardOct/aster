@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
 #include <sol/sol.hpp>
 
-static const std::string SCRIPTS_TEST_DIR = "./scripts/test/";
+#include <filesystem>
+
+static const std::string SCRIPTS_TEST_DIR = "./tests/scripts/";
 
 TEST(Sol2, HelloWorld)
 {
@@ -19,6 +21,7 @@ TEST(Sol2, HelloWorld)
 TEST(Sol2, Reading)
 {
     const std::string luaFile = SCRIPTS_TEST_DIR + "/read_table.lua";
+    EXPECT_TRUE(std::filesystem::exists(luaFile));
 
     sol::state lua;
     lua.script_file(luaFile);
@@ -332,7 +335,9 @@ TEST(Sol2, FunctionReturnToLua)
 TEST(Sol2, CppLua)
 {
     const std::string preludeScript = SCRIPTS_TEST_DIR + "/prelude_script.lua";
+    EXPECT_TRUE(std::filesystem::exists(preludeScript));
     const std::string playerScript = SCRIPTS_TEST_DIR + "/player_script.lua";
+    EXPECT_TRUE(std::filesystem::exists(playerScript));
 
     struct player {
     public:
@@ -420,6 +425,7 @@ TEST(Sol2, CppLua)
 TEST(Sol2, ReadConfig)
 {
     const std::string usertypeScript = SCRIPTS_TEST_DIR + "/usertype.lua";
+    EXPECT_TRUE(std::filesystem::exists(usertypeScript));
 
     struct SomeData {
         int one = 0;

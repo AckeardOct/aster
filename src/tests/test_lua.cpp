@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
 #include <lua/lua.hpp>
 
-static const std::string SCRIPTS_TEST_DIR = "./scripts/test/";
+#include <filesystem>
+
+static const std::string SCRIPTS_TEST_DIR = "./tests/scripts/";
 
 TEST(Lua, ReadGlobals)
 {
@@ -27,6 +29,8 @@ TEST(Lua, ReadGlobals)
 TEST(Lua, ReadTable)
 {
     const std::string scriptFile = SCRIPTS_TEST_DIR + "read_table.lua";
+    EXPECT_TRUE(std::filesystem::exists(scriptFile));
+
     lua_State* L = luaL_newstate();
     int r = luaL_dofile(L, scriptFile.c_str());
     EXPECT_EQ(LUA_OK, r);
@@ -86,6 +90,8 @@ struct Player {
 TEST(Lua, ReadStruct)
 {
     const std::string scriptFile = SCRIPTS_TEST_DIR + "read_table.lua";
+    EXPECT_TRUE(std::filesystem::exists(scriptFile));
+
     lua_State* L = luaL_newstate();
     int r = luaL_dofile(L, scriptFile.c_str());
     EXPECT_EQ(LUA_OK, r);
@@ -138,6 +144,8 @@ int lua_HostFunction(lua_State* L)
 TEST(Lua, CallFunction)
 {
     const std::string scriptFile = SCRIPTS_TEST_DIR + "call_function.lua";
+    EXPECT_TRUE(std::filesystem::exists(scriptFile));
+
     lua_State* L = luaL_newstate();
     luaL_openlibs(L);
     int err = luaL_dofile(L, scriptFile.c_str());
