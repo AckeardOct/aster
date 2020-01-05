@@ -171,11 +171,17 @@ void render()
     { // textured rectangle
         glUseProgram(shader.handle());
 
-        glm::mat4 trans = glm::identity<glm::mat4>();
-        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
-        trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
-        trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
-        shader.setMat4f("transform", trans);
+        glm::mat4 model = glm::identity<glm::mat4>();
+        model = glm::rotate(model, glm::radians(-55.0f), glm::vec3(1.0, 0.0, 0.0));
+        shader.setMat4f("model", model);
+
+        glm::mat4 view = glm::identity<glm::mat4>();
+        view = glm::translate(view, glm::vec3(0.0, 0.0, -3.0));
+        shader.setMat4f("view", view);
+
+        glm::mat4 projection = glm::identity<glm::mat4>();
+        projection = glm::perspective(glm::radians(45.0f), (float)winWidth / winHeight, 0.1f, 100.0f);
+        shader.setMat4f("projection", projection);
 
         glBindVertexArray(VAO);
         glBindTexture(GL_TEXTURE_2D, texture);
