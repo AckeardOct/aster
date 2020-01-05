@@ -1,6 +1,7 @@
 #include <GLES3/gl3.h>
 #include <SDL2/SDL.h>
 
+#include "camera.h"
 #include "shader.h"
 
 #include "common/file_system.h"
@@ -16,6 +17,7 @@
 
 const String SHADERS_DIR = "./shaders/";
 const String TEXTURES_DIR = "./textures";
+const int FPS = 30;
 
 const int winWidth = 640;
 const int winHeight = 480;
@@ -25,6 +27,7 @@ SDL_Renderer* sdl_renderer = nullptr;
 
 SDL_GLContext gl_context = nullptr;
 Shader shader(SHADERS_DIR + "/simple.vsh", SHADERS_DIR + "/simple.fsh");
+Camera camera(Vec3f(0.0, 0.0, 3.0f));
 
 void initSDL()
 {
@@ -72,6 +75,8 @@ void initOpenGlEs()
 
     glEnable(GL_DEPTH_TEST);
 
+    shader.compile();
+
     LogMsg("initOpenGlEs() success!");
 }
 
@@ -94,8 +99,6 @@ GLuint texture = 0;
 
 void initRenderObjects()
 {
-    shader.compile();
-
     // 3 float - vertix; 2 float - texture coords
     float vertices[] = {
         -0.5f, -0.5f, -0.5f, 0.0f, 0.0f,
@@ -197,20 +200,18 @@ void render()
         glUseProgram(shader.handle());
 
         glm::mat4 model = glm::identity<glm::mat4>();
-        model = glm::rotate(model, SDL_GetTicks() * glm::radians(0.05f), glm::vec3(0.5f, 1.0f, 0.0));
         shader.setMat4f("model", model);
 
-        glm::mat4 view = glm::identity<glm::mat4>();
-        view = glm::translate(view, glm::vec3(0.0, 0.0, -3.0));
+        glm::mat4 view = camera.GetViewMatrix();
         shader.setMat4f("view", view);
 
-        glm::mat4 projection = glm::identity<glm::mat4>();
-        projection = glm::perspective(glm::radians(45.0f), (float)winWidth / winHeight, 0.1f, 100.0f);
+        //glm::mat4 projection = glm::identity<glm::mat4>();
+        glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)winWidth / (float)winHeight, 0.1f, 100.0f);
+        //projection = glm::perspective(glm::radians(45.0f), (float)winWidth / winHeight, 0.1f, 100.0f);
         shader.setMat4f("projection", projection);
 
         glBindVertexArray(VAO);
         glBindTexture(GL_TEXTURE_2D, texture);
-        //glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
         glDrawArrays(GL_TRIANGLES, 0, 36);
 
         glBindVertexArray(GL_NONE);
@@ -219,19 +220,85 @@ void render()
     SDL_GL_SwapWindow(sdl_window);
 }
 
+void processKeyPress(const SDL_Event& sdl_event, float dt)
+{
+    switch (sdl_event.key.keysym.sym) {
+    case SDLK_w:
+        camera.ProcessKeyboard(Camera_Movement::FORWARD, dt);
+        break;
+    case SDLK_s:
+        camera.ProcessKeyboard(Camera_Movement::BACKWARD, dt);
+        break;
+    case SDLK_a:
+        camera.ProcessKeyboard(Camera_Movement::LEFT, dt);
+        break;
+    case SDLK_d:
+        camera.ProcessKeyboard(Camera_Movement::RIGHT, dt);
+        break;
+    case SDLK_e:
+        camera.ProcessKeyboard(Camera_Movement::UP, dt);
+        break;
+    case SDLK_q:
+        camera.ProcessKeyboard(Camera_Movement::DOWN, dt);
+        break;
+    }
+}
+
+void processMouseMotion(const SDL_Event& event, float dt)
+{
+    static int lastX = 0;
+    static int lastY = 0;
+    static bool firstMouse = true;
+    if (firstMouse) {
+        lastX = event.motion.x;
+        lastY = event.motion.y;
+        firstMouse = false;
+    }
+
+    float xoffset = event.motion.x - lastX;
+    float yoffset = lastY - event.motion.y; // reversed since y-coordinates go from bottom to top
+
+    lastX = event.motion.x;
+    lastY = event.motion.y;
+
+    camera.ProcessMouseMovement(xoffset, yoffset);
+}
+
 int main(int argc, char** argv)
 {
     initSDL();
     initOpenGlEs();
     initRenderObjects();
 
+    const float frameLength_ms = 1000.f / FPS;
+    float dt = 0;
+    uint32_t time_ms = SDL_GetTicks();
     bool quitRequested = false;
     while (!quitRequested) {
+        { // check fps
+            uint32_t newTime_ms = SDL_GetTicks();
+            dt = newTime_ms - time_ms;
+            if (dt < frameLength_ms) {
+                uint32_t diff = frameLength_ms - dt;
+                if (diff > 5) {
+                    SDL_Delay(diff / 2);
+                }
+                continue;
+            }
+            time_ms = newTime_ms;
+        }
+
         render();
 
         SDL_Event sdl_event;
         while (SDL_PollEvent(&sdl_event)) {
             switch (sdl_event.type) {
+            case SDL_KEYDOWN:
+                processKeyPress(sdl_event, dt);
+                break;
+            case SDL_MOUSEMOTION:
+                processMouseMotion(sdl_event, dt);
+                break;
             case SDL_QUIT:
                 quitRequested = true;
                 break;

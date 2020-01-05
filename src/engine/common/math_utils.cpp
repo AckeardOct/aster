@@ -16,6 +16,18 @@ bool isZero(const Vec2f& vec)
     return true;
 }
 
+bool isZero(const Vec3f& vec)
+{
+    if (std::abs(vec.x) > MIN_DIFF_FLOAT) {
+        return false;
+    } else if (std::abs(vec.y) > MIN_DIFF_FLOAT) {
+        return false;
+    } else if (std::abs(vec.z) > MIN_DIFF_FLOAT) {
+        return false;
+    }
+    return true;
+}
+
 Vec2f normalize(const Vec2f& vec)
 {
     ASSERT(!isZero(vec));

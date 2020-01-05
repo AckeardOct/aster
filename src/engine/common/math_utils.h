@@ -38,4 +38,5 @@ public:
 };
 
 bool isZero(const Vec2f& vec);
+bool isZero(const Vec3f& vec);
 Vec2f normalize(const Vec2f& vec);
