@@ -10,6 +10,10 @@
 
 #include "stb-image/stb_image.h" // TODO: change library
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 const String SHADERS_DIR = "./shaders/";
 const String TEXTURES_DIR = "./textures";
 
@@ -166,6 +170,12 @@ void render()
 
     { // textured rectangle
         glUseProgram(shader.handle());
+
+        glm::mat4 trans = glm::identity<glm::mat4>();
+        trans = glm::translate(trans, glm::vec3(0.5f, -0.5f, 0.0f));
+        trans = glm::rotate(trans, glm::radians(90.0f), glm::vec3(0.0, 0.0, 1.0));
+        trans = glm::scale(trans, glm::vec3(0.5, 0.5, 0.5));
+        shader.setMat4f("transform", trans);
 
         glBindVertexArray(VAO);
         glBindTexture(GL_TEXTURE_2D, texture);

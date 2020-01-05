@@ -4,6 +4,7 @@
 #include "common/logger.h"
 
 #include <GLES3/gl3.h>
+#include <glm/gtc/type_ptr.hpp>
 
 static GLuint loadShader(GLenum shaderType, const char* source)
 {
@@ -89,6 +90,12 @@ void Shader::setVec4f(StringRef param, const Vec4f& vec)
 {
     GLint location = getUniformLocation(param);
     glUniform4f(location, vec.x, vec.y, vec.z, vec.w);
+}
+
+void Shader::setMat4f(StringRef param, const Mat4f& mat)
+{
+    GLint location = getUniformLocation(param);
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(mat));
 }
 
 int Shader::getUniformLocation(StringRef param) const
