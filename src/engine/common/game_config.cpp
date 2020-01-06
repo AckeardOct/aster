@@ -9,7 +9,6 @@ GameConfig::GameConfig(int argc, char** argv)
     initByLua();
     LogMsg("LuaInited by file: %s", luaConfigFile.data());
     LogMsg("cfg window = %s", gen::toJson(window).dump(4).c_str());
-    LogMsg("cfg debugGrid = %s", gen::toJson(dbgDrawGrid).dump(4).c_str());
 }
 
 void GameConfig::initByLua()
@@ -18,5 +17,4 @@ void GameConfig::initByLua()
     lua.script_file(luaConfigFile.data());
 
     gen::fromLuaTable(lua, "window", window);
-    gen::fromLuaTable(lua, "dbgGrid", dbgDrawGrid);
 }

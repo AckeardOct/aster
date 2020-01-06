@@ -1,5 +1,6 @@
 #include "game_window.h"
 
+#include <GLES3/gl3.h>
 #include <SDL2/SDL.h>
 
 #include "common/logger.h"
@@ -8,12 +9,16 @@
 GameWindow::GameWindow(int argc, char** argv)
     : config(argc, argv)
 {
-    this->initSDL();
+    initSDL();
+    initOpenGl();
     scene = new AsteroidsScene(*this);
 }
 
 GameWindow::~GameWindow()
 {
+    SDL_GL_DeleteContext(gl_context);
+    gl_context = nullptr;
+
     delete scene;
     scene = nullptr;
 
@@ -24,6 +29,62 @@ GameWindow::~GameWindow()
     sdl_window = nullptr;
 
     SDL_Quit();
+}
+
+bool GameWindow::initSDL()
+{
+    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
+        ASSERT_FAIL("SDL_Init(SDL_INIT_VIDEO) failed. error: %s", SDL_GetError());
+        return false;
+    }
+
+    sdl_window = SDL_CreateWindow(config.window.title.c_str(),
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        config.window.width,
+        config.window.height,
+        SDL_WINDOW_SHOWN);
+    if (sdl_window == nullptr) {
+        ASSERT_FAIL("SDL_CreateWindow() failed. error: %s", SDL_GetError());
+        return false;
+    }
+
+    sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED);
+    if (sdl_renderer == nullptr) {
+        ASSERT_FAIL("SDL_CreateRenderer() failed. error: %s", SDL_GetError());
+        return false;
+    }
+
+    return true;
+}
+
+bool GameWindow::initOpenGl()
+{
+    gl_context = SDL_GL_CreateContext(sdl_window);
+    if (gl_context == nullptr) {
+        ASSERT_FAIL("Can't create OpenGlContext");
+        return false;
+    }
+
+    int res = 0;
+    res = SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
+    ASSERT(0 == res);
+
+    res = SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
+    ASSERT(0 == res);
+
+    res = SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0);
+    ASSERT(0 == res);
+
+    res = SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    ASSERT(0 == res);
+
+    res = SDL_GL_SetSwapInterval(1);
+    ASSERT(0 == res);
+
+    glEnable(GL_DEPTH_TEST);
+
+    return true;
 }
 
 void GameWindow::runLoop()
@@ -71,30 +132,6 @@ SDL_Renderer& GameWindow::getRenderer()
     return *sdl_renderer;
 }
 
-void GameWindow::initSDL()
-{
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        ASSERT_FAIL("SDL_Init(SDL_INIT_VIDEO) failed. error: %s", SDL_GetError());
-    }
-
-    sdl_window = SDL_CreateWindow(config.window.title.c_str(),
-        SDL_WINDOWPOS_UNDEFINED,
-        SDL_WINDOWPOS_UNDEFINED,
-        config.window.width,
-        config.window.height,
-        SDL_WINDOW_SHOWN);
-    if (sdl_window == nullptr) {
-        ASSERT_FAIL("SDL_CreateWindow() failed. error: %s", SDL_GetError());
-    }
-
-    sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED);
-    if (sdl_renderer == nullptr) {
-        ASSERT_FAIL("SDL_CreateRenderer() failed. error: %s", SDL_GetError());
-    }
-
-    LogMsg("initSDL() success!");
-}
-
 void GameWindow::processInput(float dt)
 {
     SDL_Event sdl_event;
@@ -120,41 +157,20 @@ void GameWindow::update(float dt)
 
 void GameWindow::render(float dt)
 {
-    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x00, 0x00, 0xff);
-    SDL_RenderClear(sdl_renderer);
+#ifdef USE_GL_RENDER
+    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+#else
+    glClearColor(0.f, 0.f, 0.f, 1.0f);
+#endif
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (scene) {
         scene->render(dt);
     }
 
-    drawGrid();
-
+#ifdef USE_GL_RENDER
+    SDL_GL_SwapWindow(sdl_window);
+#else
     SDL_RenderPresent(sdl_renderer);
-}
-
-void GameWindow::drawGrid()
-{
-    const auto& grid = config.dbgDrawGrid;
-    if (!grid.enable) {
-        return;
-    }
-
-    const Vec2f sz = getSize();
-    const Vec2f resolution(grid.resolutionX, grid.resolutionY);
-    const Vec2f offset(grid.offsetX, grid.offsetY);
-    const Color color(0x00, 0xff, 0x00, 0x00);
-
-    SDL_SetRenderDrawColor(sdl_renderer, (u_char)color.r, (u_char)color.g, (u_char)color.b, (u_char)color.a);
-
-    int currX = offset.x;
-    while (currX < sz.x) {
-        SDL_RenderDrawLine(sdl_renderer, currX, 0, currX, sz.y);
-        currX += resolution.x;
-    }
-
-    int currY = offset.y;
-    while (currY < sz.y) {
-        SDL_RenderDrawLine(sdl_renderer, 0, currY, sz.x, currY);
-        currY += resolution.y;
-    }
+#endif
 }

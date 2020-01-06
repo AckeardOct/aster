@@ -11,21 +11,12 @@ struct WindowCfg GEN_LUA GEN_JSON {
     String title = "Aster";
 };
 
-struct DbgGridCfg GEN_LUA GEN_JSON {
-    bool enable = false;
-    int resolutionX = 0;
-    int resolutionY = 0;
-    int offsetX = 0; // TODO: Vector type
-    int offsetY = 0; // TODO: Color type
-};
-
 class GameConfig {
 public:
     GameConfig(int argc, char** argv);
 
 public:
     WindowCfg window;
-    DbgGridCfg dbgDrawGrid;
 
 private:
     void initByLua();

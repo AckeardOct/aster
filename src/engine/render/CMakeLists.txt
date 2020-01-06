@@ -1,18 +1,17 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(systems LANGUAGES CXX)
+project(render LANGUAGES CXX)
 
 
 GET_PROPERTY(GL_ENGINE_3RD GLOBAL PROPERTY GL_ENGINE_3RD)
 GET_PROPERTY(GL_SRC_DIR GLOBAL PROPERTY GL_SRC_DIR)
 
 
-set(src 
-    sys_basic.cpp
-    sys_render.cpp
+set(src
+    shader.cpp
 )
 
 
 add_library(${PROJECT_NAME} STATIC ${src})
 add_library(engine::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
-target_link_libraries(${PROJECT_NAME} ${GL_ENGINE_3RD} engine::common engine::components engine::render)
+target_link_libraries(${PROJECT_NAME} ${GL_ENGINE_3RD} engine::common)

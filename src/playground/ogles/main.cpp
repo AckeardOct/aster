@@ -1,13 +1,12 @@
 #include <GLES3/gl3.h>
 #include <SDL2/SDL.h>
 
-#include "camera.h"
-#include "shader.h"
-
 #include "common/file_system.h"
 #include "common/logger.h"
 #include "common/math_utils.h"
 #include "common/string.h"
+#include "render/camera.h"
+#include "render/shader.h"
 
 #include "stb-image/stb_image.h" // TODO: change library
 
@@ -15,8 +14,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-const String SHADERS_DIR = "./shaders/";
-const String TEXTURES_DIR = "./textures";
+const String SHADERS_DIR = "./playground/shaders/";
+const String TEXTURES_DIR = "./playground/textures/";
 const int FPS = 30;
 
 const int winWidth = 640;
@@ -57,7 +56,6 @@ void initOpenGlEs()
     ASSERT(gl_context);
 
     int res = 0;
-
     res = SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_ES);
     ASSERT(0 == res);
 
@@ -192,7 +190,7 @@ void destroyRenderObjects()
 
 void render()
 {
-    glViewport(0, 0, winWidth, winHeight);
+    //glViewport(0, 0, winWidth, winHeight);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -205,9 +203,7 @@ void render()
         glm::mat4 view = camera.GetViewMatrix();
         shader.setMat4f("view", view);
 
-        //glm::mat4 projection = glm::identity<glm::mat4>();
         glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)winWidth / (float)winHeight, 0.1f, 100.0f);
-        //projection = glm::perspective(glm::radians(45.0f), (float)winWidth / winHeight, 0.1f, 100.0f);
         shader.setMat4f("projection", projection);
 
         glBindVertexArray(VAO);

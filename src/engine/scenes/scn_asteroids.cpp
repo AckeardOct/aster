@@ -64,7 +64,7 @@ void AsteroidsScene::initBasicSystems()
 
 void AsteroidsScene::initRenderSystems()
 {
-    renderSystems.push_back(new RectRendSys());
+    renderSystems.push_back(new RectRendSys(window));
 }
 
 void AsteroidsScene::initEntities()

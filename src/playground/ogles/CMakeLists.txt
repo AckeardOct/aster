@@ -9,7 +9,6 @@ GET_PROPERTY(GL_SRC_DIR GLOBAL PROPERTY GL_SRC_DIR)
 
 set(src
     main.cpp
-    shader.cpp
 )
 
 add_subdirectory(stb-image)

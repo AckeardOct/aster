@@ -18,17 +18,16 @@ public:
     SDL_Renderer& getRenderer();
 
 private:
-    void initSDL(void);
+    bool initSDL();
+    bool initOpenGl();
     void processInput(float dt);
     void update(float dt);
     void render(float dt);
 
-    // dbg draw
-    void drawGrid();
-
 private:
     GameConfig config;
     SDL_Window* sdl_window = nullptr;
+    void* gl_context = nullptr;
     SDL_Renderer* sdl_renderer = nullptr;
     IScene* scene = nullptr;
 
