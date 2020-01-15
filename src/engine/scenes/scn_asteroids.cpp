@@ -75,30 +75,6 @@ void AsteroidsScene::initEntities()
     const Vec2f wsize = window.getSize();
     const Vec2f wcenter = window.getCenter();
 
-    if (false) { // cube
-        auto entity = reg.create();
-        Vec2f pos(0, 0);
-        Vec2f size(1, 1);
-        reg.assign<PositionCmp>(entity, pos, size);
-
-        Color color(0x00, 0xff, 0x00, 0x00);
-        reg.assign<RectRendCmp>(entity, color, color);
-        //reg.assign<PhysDynamicBodyCmp>(entity, physWorld, pos, size);
-    }
-    //return;
-    if (false) { // cube
-        auto entity = reg.create();
-        Vec2f pos(wcenter.x, wcenter.y);
-        Vec2f size(wsize);
-        reg.assign<PositionCmp>(entity, pos, size);
-
-        Color color(0x00, 0xff, 0x00, 0x00);
-        reg.assign<RectRendCmp>(entity, color, color);
-        //reg.assign<PhysDynamicBodyCmp>(entity, physWorld, pos, size);
-    }
-
-    //return;
-
     { // player
         auto entity = reg.create();
         Vec2f pos(wcenter.x, wcenter.y);
