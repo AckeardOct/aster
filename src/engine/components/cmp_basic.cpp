@@ -6,9 +6,10 @@
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
+
 PositionCmp::PositionCmp(Vec2f pos, Vec2f size)
-    : pos(pos)
-    , size(size)
 {
     trans.position.x = pos.x;
     trans.position.y = pos.y;

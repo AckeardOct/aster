@@ -7,7 +7,6 @@
 #include "components/cmp_render.h"
 
 #include <GLES3/gl3.h>
-#include <SDL2/SDL_render.h>
 
 #include "render/camera_2d.h"
 
@@ -68,9 +67,7 @@ void RectRendSys::update(entt::registry& reg, const ICamera& camera)
         auto& rectCmp = view.get<RectRendCmp>(ent);
 
         glm::mat4 modelM = glm::identity<glm::mat4>();
-        modelM = glm::translate(modelM, Vec3f(posCmp.pos.x, -posCmp.pos.y, 0.0f));
-        // rotate
-        modelM = glm::scale(modelM, Vec3f(posCmp.size.x, posCmp.size.y, 1.0f));
+        posCmp.trans.getModelMatrix(modelM);
         shader.setMat4f("model", modelM);
 
         // TODO: make border color

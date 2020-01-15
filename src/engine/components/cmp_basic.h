@@ -7,9 +7,6 @@
 class b2Body;
 
 struct PositionCmp {
-    Vec2f pos;
-    Vec2f size;
-
     Transform trans;
 
 public:

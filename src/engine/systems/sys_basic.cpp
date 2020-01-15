@@ -78,7 +78,7 @@ void PhysSys::update(entt::registry& reg, float dt)
         b2Vec2 position = physBodyCmp.body->GetPosition();
         // TODO: maybe check angles in Box2D ???
 
-        posCmp.pos.x = position.x;
-        posCmp.pos.y = position.y;
+        posCmp.trans.position.x = position.x;
+        posCmp.trans.position.y = position.y;
     }
 }

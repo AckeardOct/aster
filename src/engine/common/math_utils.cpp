@@ -41,14 +41,15 @@ Vec2f normalize(const Vec2f& vec)
 Transform::Transform()
     : sizeScale(Vec3f(1))
     , orientation(glm::angleAxis(0.f, Vec3f(0, 1, 0)))
+    , position(Vec3f(0))
 {
 }
 
-Mat4f Transform::toMat4f() const
+void Transform::getModelMatrix(Mat4f& modelOut) const
 {
-    const Mat4f scaleMatrix = scale(Mat4f(), sizeScale);
-    const Mat4f rotationMatrix = glm::mat4_cast(orientation);
-    const Mat4f translateMatrix = translate(Mat4f(), position);
-
-    return translateMatrix * rotationMatrix * scaleMatrix;
+    modelOut = glm::identity<Mat4f>();
+    modelOut = glm::translate(modelOut, Vec3f(position.x, -position.y, position.z));
+    // rotate
+    //modelOut = modelOut * glm::mat4_cast(orientation);
+    modelOut = glm::scale(modelOut, sizeScale);
 }
