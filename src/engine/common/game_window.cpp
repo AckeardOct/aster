@@ -157,20 +157,12 @@ void GameWindow::update(float dt)
 
 void GameWindow::render(float dt)
 {
-#ifdef USE_GL_RENDER
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-#else
-    glClearColor(0.f, 0.f, 0.f, 1.0f);
-#endif
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     if (scene) {
         scene->render(dt);
     }
 
-#ifdef USE_GL_RENDER
     SDL_GL_SwapWindow(sdl_window);
-#else
-    SDL_RenderPresent(sdl_renderer);
-#endif
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "i_scene.h"
+#include "render/i_camera.h"
 
 #include <Box2D/Dynamics/b2World.h>
 #include <entt/entity/registry.hpp>
@@ -29,6 +30,7 @@ private:
 private:
     b2World physWorld;
     InputSys* inputSystem = nullptr;
+    ICamera* camera = nullptr;
 
     entt::registry reg;
     std::vector<IBasicSys*> basicSystems;

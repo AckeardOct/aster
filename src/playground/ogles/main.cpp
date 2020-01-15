@@ -5,9 +5,9 @@
 #include "common/logger.h"
 #include "common/math_utils.h"
 #include "common/string.h"
-#include "render/camera.h"
 #include "render/shader.h"
 
+#include "camera.h"
 #include "stb-image/stb_image.h" // TODO: change library
 
 #include <glm/glm.hpp>
@@ -26,7 +26,7 @@ SDL_Renderer* sdl_renderer = nullptr;
 
 SDL_GLContext gl_context = nullptr;
 Shader shader(SHADERS_DIR + "/simple.vsh", SHADERS_DIR + "/simple.fsh");
-Camera camera(Vec3f(0.0, 0.0, 3.0f));
+Camera3d camera(Vec3f(0.0, 0.0, 3.0f));
 
 void initSDL()
 {

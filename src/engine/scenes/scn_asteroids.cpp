@@ -2,6 +2,7 @@
 
 #include "components/cmp_basic.h"
 #include "components/cmp_render.h"
+#include "render/camera_2d.h"
 #include "systems/sys_basic.h"
 #include "systems/sys_render.h"
 
@@ -9,6 +10,8 @@ AsteroidsScene::AsteroidsScene(GameWindow& window)
     : IScene(window)
     , physWorld(b2Vec2(0.f, 1.f))
 {
+    camera = new Camera2D(window.getSize());
+
     initBasicSystems();
     initRenderSystems();
     initEntities();
@@ -50,7 +53,7 @@ void AsteroidsScene::render(float dt)
     SDL_Renderer& sdl_renderer = window.getRenderer();
     for (auto& sys : renderSystems) {
         if (sys->isEnabled()) {
-            sys->update(reg, sdl_renderer);
+            sys->update(reg, *camera);
         }
     }
 }
@@ -71,6 +74,30 @@ void AsteroidsScene::initEntities()
 {
     const Vec2f wsize = window.getSize();
     const Vec2f wcenter = window.getCenter();
+
+    if (false) { // cube
+        auto entity = reg.create();
+        Vec2f pos(0, 0);
+        Vec2f size(1, 1);
+        reg.assign<PositionCmp>(entity, pos, size);
+
+        Color color(0x00, 0xff, 0x00, 0x00);
+        reg.assign<RectRendCmp>(entity, color, color);
+        //reg.assign<PhysDynamicBodyCmp>(entity, physWorld, pos, size);
+    }
+    //return;
+    if (false) { // cube
+        auto entity = reg.create();
+        Vec2f pos(wcenter.x, wcenter.y);
+        Vec2f size(wsize);
+        reg.assign<PositionCmp>(entity, pos, size);
+
+        Color color(0x00, 0xff, 0x00, 0x00);
+        reg.assign<RectRendCmp>(entity, color, color);
+        //reg.assign<PhysDynamicBodyCmp>(entity, physWorld, pos, size);
+    }
+
+    //return;
 
     { // player
         auto entity = reg.create();
