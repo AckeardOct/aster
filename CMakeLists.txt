@@ -21,6 +21,9 @@ set(SOL2_DIR ${CMAKE_SOURCE_DIR}/build/sol2)
 include_directories(${SOL2_DIR}/single/single/include)
 
 
+set(BULLET_DIR ${CMAKE_SOURCE_DIR}/build/bullet3)
+include_directories(${BULLET_DIR}/src)
+
 set(GL_SRC_DIR ${CMAKE_CURRENT_LIST_DIR}/src)
 SET_PROPERTY(GLOBAL PROPERTY GL_SRC_DIR ${GL_SRC_DIR})
 
@@ -41,10 +44,9 @@ set(GL_ALL_ENGINE
 )
 SET_PROPERTY(GLOBAL PROPERTY GL_ALL_ENGINE ${GL_ALL_ENGINE})
 
-
 include_directories(src/engine)
-add_subdirectory(src/engine)
 
+add_subdirectory(src/engine)
 add_subdirectory(src/aster)
 add_subdirectory(src/tests)
 add_subdirectory(src/playground/ogles)

@@ -79,7 +79,7 @@ void AsteroidsScene::initEntities()
         auto entity = reg.create();
         Vec2f pos(wcenter.x, wcenter.y);
         Vec2f size(20.f, 20.f);
-        reg.assign<PositionCmp>(entity, pos, size);
+        const PositionCmp& posCmp = reg.assign<PositionCmp>(entity, pos, size);
 
         Color color(0xff, 0x00, 0x00, 0x00);
         reg.assign<RectRendCmp>(entity, color, color);
@@ -88,29 +88,29 @@ void AsteroidsScene::initEntities()
         reg.assign<MoveCmp>(entity, Vec2f(speed, speed));
         reg.assign<InputableCmp>(entity);
 
-        reg.assign<PhysDynamicBodyCmp>(entity, physWorld, pos, size);
+        reg.assign<PhysDynamicBodyCmp>(entity, physWorld, posCmp);
     }
 
     { // cube
         auto entity = reg.create();
         Vec2f pos(wcenter.x - 40, wcenter.y);
         Vec2f size(Vec2f(20, 20));
-        reg.assign<PositionCmp>(entity, pos, size);
+        const PositionCmp& posCmp = reg.assign<PositionCmp>(entity, pos, size);
 
         Color color(0x00, 0xff, 0x00, 0x00);
         reg.assign<RectRendCmp>(entity, color, color);
-        reg.assign<PhysDynamicBodyCmp>(entity, physWorld, pos, size);
+        reg.assign<PhysDynamicBodyCmp>(entity, physWorld, posCmp);
     }
 
     { // platform
         auto entity = reg.create();
         Vec2f size(wcenter.x / 2, 10);
         Vec2f pos(wcenter.x, wsize.y * 0.75f);
-        reg.assign<PositionCmp>(entity, pos, size);
+        const PositionCmp& posCmp = reg.assign<PositionCmp>(entity, pos, size);
 
         Color color(0x00, 0x00, 0xff, 0x00);
         reg.assign<RectRendCmp>(entity, color, color);
-        reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
+        reg.assign<PhysStaticBodyCmp>(entity, physWorld, posCmp);
     }
 
     { // walls
@@ -118,27 +118,27 @@ void AsteroidsScene::initEntities()
         { // left
             auto entity = reg.create();
             Vec2f pos(-1, wcenter.y);
-            reg.assign<PositionCmp>(entity, pos, size);
-            reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
+            const PositionCmp& posCmp = reg.assign<PositionCmp>(entity, pos, size);
+            reg.assign<PhysStaticBodyCmp>(entity, physWorld, posCmp);
         }
         { // right
             auto entity = reg.create();
             Vec2f pos(wsize.x + 1, wcenter.y);
-            reg.assign<PositionCmp>(entity, pos, size);
-            reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
+            const PositionCmp& posCmp = reg.assign<PositionCmp>(entity, pos, size);
+            reg.assign<PhysStaticBodyCmp>(entity, physWorld, posCmp);
         }
         size = Vec2f(wsize.x, 0);
         { // top
             auto entity = reg.create();
             Vec2f pos(wcenter.x, -1);
-            reg.assign<PositionCmp>(entity, pos, size);
-            reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
+            const PositionCmp& posCmp = reg.assign<PositionCmp>(entity, pos, size);
+            reg.assign<PhysStaticBodyCmp>(entity, physWorld, posCmp);
         }
         { // bottom
             auto entity = reg.create();
             Vec2f pos(wcenter.x, wsize.y + 1);
-            reg.assign<PositionCmp>(entity, pos, size);
-            reg.assign<PhysStaticBodyCmp>(entity, physWorld, pos, size);
+            const PositionCmp& posCmp = reg.assign<PositionCmp>(entity, pos, size);
+            reg.assign<PhysStaticBodyCmp>(entity, physWorld, posCmp);
         }
     }
 }

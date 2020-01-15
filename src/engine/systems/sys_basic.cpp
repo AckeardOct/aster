@@ -78,6 +78,8 @@ void PhysSys::update(entt::registry& reg, float dt)
         b2Vec2 position = physBodyCmp.body->GetPosition();
         // TODO: maybe check angles in Box2D ???
 
+        posCmp.trans.orientation = glm::angleAxis(-physBodyCmp.body->GetAngle(), Vec3f_UnitZ);
+
         posCmp.trans.position.x = position.x;
         posCmp.trans.position.y = position.y;
     }

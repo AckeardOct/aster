@@ -23,40 +23,42 @@ MoveCmp::MoveCmp(Vec2f speed)
 {
 }
 
-PhysDynamicBodyCmp::PhysDynamicBodyCmp(b2World& physWorld, Vec2f pos, Vec2f size)
+PhysDynamicBodyCmp::PhysDynamicBodyCmp(b2World& physWorld, const PositionCmp& posCmp)
 {
     b2BodyDef bodyDef;
     bodyDef.type = b2_dynamicBody;
-    bodyDef.position.Set(pos.x, pos.y);
-    this->body = physWorld.CreateBody(&bodyDef);
+    bodyDef.position.Set(posCmp.trans.position.x, posCmp.trans.position.y);
+    body = physWorld.CreateBody(&bodyDef);
 
     this->body->SetFixedRotation(true);
 
     b2PolygonShape dynamicBox;
-    size /= 2.f;
-    dynamicBox.SetAsBox(size.x, size.y);
+    dynamicBox.SetAsBox(posCmp.trans.sizeScale.x / 2.f, posCmp.trans.sizeScale.y / 2.f);
 
     b2FixtureDef fixtureDef;
     fixtureDef.shape = &dynamicBox;
-    fixtureDef.density = 1.f;
-    fixtureDef.friction = 0.3f;
+    fixtureDef.friction = 0.f;
+    fixtureDef.restitution = 1.0f;
 
-    this->body->CreateFixture(&fixtureDef);
+    const Vec3f& euler = glm::eulerAngles(posCmp.trans.orientation);
+    body->SetTransform(b2Vec2(posCmp.trans.position.x, posCmp.trans.position.y), -euler.z);
+    body->CreateFixture(&fixtureDef);
 }
 
-PhysStaticBodyCmp::PhysStaticBodyCmp(b2World& physWorld, Vec2f pos, Vec2f size)
+PhysStaticBodyCmp::PhysStaticBodyCmp(b2World& physWorld, const PositionCmp& posCmp)
 {
     b2BodyDef bodyDef;
     bodyDef.type = b2_staticBody;
-    bodyDef.position.Set(pos.x, pos.y);
+    bodyDef.position.Set(posCmp.trans.position.x, posCmp.trans.position.y);
     this->body = physWorld.CreateBody(&bodyDef);
 
-    b2PolygonShape dynamicBox;
-    size /= 2.f;
-    dynamicBox.SetAsBox(size.x, size.y);
+    b2PolygonShape staticBox;
+    staticBox.SetAsBox(posCmp.trans.sizeScale.x / 2.f, posCmp.trans.sizeScale.y / 2.f);
 
     b2FixtureDef fixtureDef;
-    fixtureDef.shape = &dynamicBox;
+    fixtureDef.shape = &staticBox;
 
-    this->body->CreateFixture(&fixtureDef);
+    const Vec3f& euler = glm::eulerAngles(posCmp.trans.orientation);
+    body->SetTransform(b2Vec2(posCmp.trans.position.x, posCmp.trans.position.y), -euler.z);
+    body->CreateFixture(&fixtureDef);
 }

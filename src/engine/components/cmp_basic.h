@@ -27,12 +27,12 @@ struct PhysDynamicBodyCmp {
     b2Body* body = nullptr;
 
 public:
-    PhysDynamicBodyCmp(b2World& physWorld, Vec2f pos, Vec2f size);
+    PhysDynamicBodyCmp(b2World& physWorld, const PositionCmp& posCmp);
 };
 
 struct PhysStaticBodyCmp {
     b2Body* body = nullptr;
 
 public:
-    PhysStaticBodyCmp(b2World& physWorld, Vec2f pos, Vec2f size);
+    PhysStaticBodyCmp(b2World& physWorld, const PositionCmp& posCmp);
 };

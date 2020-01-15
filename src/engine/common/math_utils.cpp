@@ -49,7 +49,6 @@ void Transform::getModelMatrix(Mat4f& modelOut) const
 {
     modelOut = glm::identity<Mat4f>();
     modelOut = glm::translate(modelOut, Vec3f(position.x, -position.y, position.z));
-    // rotate
-    //modelOut = modelOut * glm::mat4_cast(orientation);
+    modelOut = modelOut * glm::mat4_cast(orientation);
     modelOut = glm::scale(modelOut, sizeScale);
 }
