@@ -4,14 +4,16 @@
 #include <SDL2/SDL.h>
 
 #include "common/logger.h"
-#include "scenes/scn_asteroids.h"
+//#include "scenes/scn_asteroids.h"
+#include "scenes/scn_obs.h"
 
 GameWindow::GameWindow(int argc, char** argv)
     : config(argc, argv)
 {
     initSDL();
     initOpenGl();
-    scene = new AsteroidsScene(*this);
+    //scene = new AsteroidsScene(*this);
+    scene = new ObsScene(*this);
 }
 
 GameWindow::~GameWindow()

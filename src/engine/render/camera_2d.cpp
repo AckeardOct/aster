@@ -1,7 +1,8 @@
 #include "camera_2d.h"
 
-Camera2D::Camera2D(const Vec2f& area, const Vec2f& offset)
-    : area(area)
+Camera2D::Camera2D(GameWindow& window, const Vec2f& area, const Vec2f& offset)
+    : ICamera(window)
+    , area(area)
     , offset(offset)
 {
 }

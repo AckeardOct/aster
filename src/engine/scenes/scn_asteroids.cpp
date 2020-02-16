@@ -10,7 +10,7 @@ AsteroidsScene::AsteroidsScene(GameWindow& window)
     : IScene(window)
     , physWorld(b2Vec2(0.f, 1.f))
 {
-    camera = new Camera2D(window.getSize());
+    camera = new Camera2D(window, window.getSize());
 
     initBasicSystems();
     initRenderSystems();
@@ -50,7 +50,6 @@ void AsteroidsScene::update(float dt)
 
 void AsteroidsScene::render(float dt)
 {
-    SDL_Renderer& sdl_renderer = window.getRenderer();
     for (auto& sys : renderSystems) {
         if (sys->isEnabled()) {
             sys->update(reg, *camera);

@@ -10,6 +10,7 @@ GET_PROPERTY(GL_SRC_DIR GLOBAL PROPERTY GL_SRC_DIR)
 set(src
     shader.cpp
     camera_2d.cpp
+    camera_3d.cpp
 )
 
 

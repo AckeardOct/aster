@@ -5,3 +5,9 @@ RectRendCmp::RectRendCmp(Color borderColor, Color fillColor)
     , fillColor(fillColor)
 {
 }
+
+CubeRendCmp::CubeRendCmp(Color borderColor, Color fillColor)
+    : borderColor(borderColor)
+    , fillColor(fillColor)
+{
+}

@@ -4,7 +4,7 @@
 
 class Camera2D : public ICamera {
 public:
-    Camera2D(const Vec2f& area, const Vec2f& offset = Vec2f_Zero);
+    Camera2D(GameWindow& window, const Vec2f& area, const Vec2f& offset = Vec2f_Zero);
 
 public: // ICamera interface
     void getViews(Mat4f& view, Mat4f& projection) const;

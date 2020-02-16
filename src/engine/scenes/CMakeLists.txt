@@ -9,6 +9,7 @@ GET_PROPERTY(GL_SRC_DIR GLOBAL PROPERTY GL_SRC_DIR)
 
 set(src 
     scn_asteroids.cpp
+    scn_obs.cpp
 )
 
 

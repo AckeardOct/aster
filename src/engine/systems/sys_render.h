@@ -34,5 +34,21 @@ public: // IRenderSys interface
     virtual void update(entt::registry& reg, const ICamera& camera) override;
 
 private:
+    uint VAO = 0;
+    uint VBO = 0;
+    uint EBO = 0;
+    Shader shader;
+};
+
+class CubeRendSys : public IRenderSys {
+public:
+    CubeRendSys(GameWindow& window);
+
+public: // IRenderSys interface
+    virtual void update(entt::registry& reg, const ICamera& camera) override;
+
+private:
+    uint VAO = 0;
+    uint VBO = 0;
     Shader shader;
 };

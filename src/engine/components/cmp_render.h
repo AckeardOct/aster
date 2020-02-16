@@ -11,6 +11,15 @@ public:
     Color fillColor;
 };
 
+class CubeRendCmp {
+public:
+    CubeRendCmp(Color borderColor, Color fillColor = Color(0, 0, 0, 0));
+
+public:
+    Color borderColor;
+    Color fillColor;
+};
+
 class PolyRenddCmp {
 public:
     PolyRenddCmp(Color color);
