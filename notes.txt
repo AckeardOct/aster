@@ -3,3 +3,7 @@ conan remote add bincrafters "https://api.bintray.com/conan/bincrafters/public-c
 
 # code-style
 clang-format WebKit style
+
+# ubuntu for compile
+libreadline-dev # for lua
+libgles2-mesa-dev # for opengl
